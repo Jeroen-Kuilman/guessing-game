@@ -80,6 +80,6 @@ body {
 /* Class gets added when right clicked */
 .right-button,
 .right-button:hover {
-  transform: scale(115%);
+  transform: scale(110%);
   background-color: green;
 }

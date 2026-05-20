@@ -10,8 +10,8 @@ const btnsPlay = document.querySelectorAll(".btn-play");
 const btnReset = document.querySelector(".btn-reset");
 
 //functions
-const randomNumberCall = () => Math.ceil(Math.random() * 12);
-const randomNumber = randomNumberCall();
+const randomNumber = () => Math.ceil(Math.random() * 12);
+let num;
 
 // the max amount of attempts
 let clickCounter;
@@ -21,6 +21,7 @@ let playing;
 //functions
 //////////////////////////////////////
 const init = function () {
+  num = randomNumber();
   clickCounter = 5;
   playing = true;
 
@@ -43,11 +44,11 @@ const init = function () {
   }, 1000);
 };
 
+init();
 /////////////////////////////////////
 //eventhandlers
 /////////////////////////////////////
 //logic for clicking the play buttons
-init();
 
 btnReset.addEventListener("click", function (e) {
   init();
@@ -56,10 +57,10 @@ btnReset.addEventListener("click", function (e) {
 btnsPlay.forEach((btn) =>
   btn.addEventListener("click", function (e) {
     e.preventDefault();
-    console.log(clickCounter);
-    console.log(randomNumber);
+    // console.log(num);
+
     if (playing) {
-      if (+btn.textContent === randomNumber) {
+      if (+btn.textContent === num) {
         tracker.textContent = "You win!";
         btn.classList.add("right-button");
         playing = false;
