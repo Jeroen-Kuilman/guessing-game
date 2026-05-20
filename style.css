@@ -1,0 +1,78 @@
+body {
+  font-family:
+    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  color: #444;
+  background-color: #f5f5e9;
+  line-height: 2rem;
+}
+
+.header {
+  background-color: #6db2b3;
+  align-content: center;
+  height: 150px;
+}
+
+.title {
+  text-align: center;
+  color: #fff;
+  font-style: italic;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.btn-section {
+  text-align: center;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%/3, max(64px, 100%/5)), 1fr)
+  );
+  margin-bottom: 100px;
+  gap: 20px;
+}
+
+.btn {
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  cursor: pointer;
+  background-color: #6db2b3;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  border-radius: 40px;
+  transition: all 0.5s;
+  height: 3rem;
+}
+.btn-play {
+  opacity: 0;
+}
+.btn-visible {
+  opacity: 1;
+}
+
+.btn:hover {
+  transform: scale(105%);
+}
+
+.reset-section {
+  margin-bottom: 100px;
+}
+.footer {
+  background-color: #6db2b39e;
+  height: 25px;
+}
+
+/* Class gets added when wrongly clicked */
+.wrong-button,
+.wrong-button:hover {
+  transform: rotate3d(0, 1, 0, -180deg);
+  background-color: red;
+}
+
+/* Class gets added when right clicked */
+.right-button,
+.right-button:hover {
+  transform: scale(115%);
+  background-color: green;
+}
