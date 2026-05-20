@@ -5,12 +5,19 @@ body {
   color: #444;
   background-color: #f5f5e9;
   line-height: 2rem;
+
+  margin: 0 auto;
 }
 
 .header {
   background-color: #6db2b3;
   align-content: center;
   height: 150px;
+}
+
+.main {
+  padding: 10%;
+  max-width: 1200;
 }
 
 .title {
@@ -28,7 +35,7 @@ body {
     auto-fit,
     minmax(min(100%/3, max(64px, 100%/5)), 1fr)
   );
-  margin-bottom: 100px;
+  margin-bottom: 50px;
   gap: 20px;
 }
 
@@ -56,7 +63,7 @@ body {
 }
 
 .reset-section {
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 .footer {
   background-color: #6db2b39e;
