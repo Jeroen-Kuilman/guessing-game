@@ -1,39 +1,72 @@
 "use strict";
 
 //elements variables
-const title = document.querySelector(".title");
+const titleBetween = document.querySelector(".title-between");
 const tracker = document.querySelector(".progress-tracker");
 const attemptsCounter = document.querySelector(".attempt-counter");
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const btnSection = document.querySelector(".btn-section");
+
+const inputChoiceAmount = document.querySelector("#choice-amount");
+const inputAttemptAmount = document.querySelector("#attempt-amount");
 
 //button variable
-const btnsPlay = document.querySelectorAll(".btn-play");
+let btnsPlay = document.querySelectorAll(".btn-play");
 const btnReset = document.querySelector(".btn-reset");
+const btnOptions = document.querySelector(".btn-options");
+const btnCancel = document.querySelector(".btn-cancel");
+const btnConfirm = document.querySelector(".btn-confirm");
 
-//functions
-const randomNumber = () => Math.ceil(Math.random() * 12);
-let num;
-
-// the max amount of attempts
-let clickCounter;
-let playing;
+let num, clickCounter, playing;
 
 ///////////////////////////////////////
 //functions
 //////////////////////////////////////
+const createPlayButton = (amount) => {
+  for (let i = 0; i < amount; i++) {
+    const newButton = document.createElement("button");
+    newButton.classList.add("btn", "btn-play", `btn-${i + 13}`, "btn-visible");
+    newButton.textContent = i + 13;
+    newButton.addEventListener("click", gameLogic); // ✅ attach only to new button
+    btnSection.insertAdjacentElement("beforeend", newButton);
+  }
+  btnsPlay = document.querySelectorAll(".btn-play");
+};
+
+// current amount = 50
+// (new) amount = 30
+const destroyPlayButton = (amount) => {
+  let curAmount = btnsPlay.length;
+
+  while (curAmount > amount) {
+    btnsPlay[curAmount - 1].remove();
+    curAmount--;
+  }
+  btnsPlay = document.querySelectorAll(".btn-play");
+};
+
+const randomNumber = (num = 12) => Math.ceil(Math.random() * num);
+
+// reset game
 const init = function () {
+  // inputChoiceAmount.value = "";
+  // inputAttemptAmount.value = "";
+
   num = randomNumber();
-  clickCounter = 5;
+  clickCounter = 4;
+
   playing = true;
 
   tracker.textContent = "click to start...";
   attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
+  titleBetween.textContent = "Choose a number between 1 and 12";
+  createPlayButton(12);
+  destroyPlayButton(12);
 
-  btnsPlay.forEach((btn, i) => {
-    btn.classList.remove("right-button");
-    btn.classList.remove("wrong-button");
-    btn.classList.remove("btn-visible");
-    btn.style.backgroundColor = "";
-    btn.style.transform = "";
+  btnsPlay.forEach((btn) => {
+    btn.classList.remove("right-button", "wrong-button", "btn-visible");
+    btn.removeAttribute("style");
   });
 
   setTimeout(() => {
@@ -41,41 +74,106 @@ const init = function () {
       btn.textContent = i + 1;
       btn.classList.add("btn-visible");
     });
-  }, 1000);
+  }, 800);
 };
 
-init();
+// The gameplay loop
+const gameLogic = function (e) {
+  const btn = e.target;
+
+  if (playing) {
+    if (+btn.textContent === num) {
+      tracker.textContent = `${clickCounter === 1 ? "You win, that was indeed a wise choice!" : "You win, with attempts to spare!"}`;
+      btnsPlay.forEach((btn) => {
+        btn.classList.add("right-button");
+        btn.textContent = "";
+      });
+      playing = false;
+    } else if (!btn.classList.contains("wrong-button")) {
+      clickCounter--;
+      tracker.textContent = `${clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
+      attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
+      btn.classList.add("wrong-button");
+      btn.textContent = "";
+    }
+
+    if (clickCounter === 0) {
+      btnsPlay.forEach((btn) => {
+        btn.classList.add("wrong-button");
+        btn.textContent = "";
+      });
+      tracker.textContent = "You lose, that choice wasn't wise...";
+      playing = false;
+    }
+  }
+};
+
+// open and close modal (options) window
+const openModal = function () {
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+};
+const closeModal = function () {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+};
+
+//options logic
+const optionsLogic = function () {
+  const newChoiceAmount = Math.min(100, Math.max(4, +inputChoiceAmount.value));
+  const newAttemptAmount = Math.min(50, Math.max(1, +inputAttemptAmount.value));
+  const curAmount = btnsPlay.length;
+
+  // choose the amount of choices
+  if (newChoiceAmount >= curAmount) {
+    createPlayButton(newChoiceAmount - curAmount);
+  } else {
+    destroyPlayButton(newChoiceAmount);
+  }
+
+  // choose the amount of attempts (if left empty, it wil default to 40% of the amount of choices)
+  if (inputAttemptAmount.value) {
+    attemptsCounter.textContent = `Attempts left: ${newAttemptAmount}`;
+    clickCounter = newAttemptAmount;
+  } else {
+    attemptsCounter.textContent = `Attempts left: ${Math.trunc(newChoiceAmount * 0.4)}`;
+    clickCounter = Math.trunc(newChoiceAmount * 0.4);
+  }
+
+  num = randomNumber(newChoiceAmount);
+  titleBetween.textContent = `Choose a number between 1 and ${newChoiceAmount}`;
+};
+
 /////////////////////////////////////
 //eventhandlers
 /////////////////////////////////////
 //logic for clicking the play buttons
+init();
 
-btnReset.addEventListener("click", function (e) {
-  init();
+// click for reset
+btnReset.addEventListener("click", init);
+
+// click to guess
+btnsPlay.forEach((btn) => btn.addEventListener("click", gameLogic));
+
+// click to open options
+btnOptions.addEventListener("click", openModal);
+
+// click to cancel options
+btnCancel.addEventListener("click", function (e) {
+  e.preventDefault();
+  closeModal();
 });
 
-btnsPlay.forEach((btn) =>
-  btn.addEventListener("click", function (e) {
-    e.preventDefault();
-    // console.log(num);
+// click to confirm options
+btnConfirm.addEventListener("click", function (e) {
+  e.preventDefault();
+  init();
+  optionsLogic();
+  closeModal();
+});
 
-    if (playing) {
-      if (+btn.textContent === num) {
-        tracker.textContent = "You win!";
-        btn.classList.add("right-button");
-        playing = false;
-      } else {
-        tracker.textContent = "Guess again!";
-        clickCounter--;
-        attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
-        btn.classList.add("wrong-button");
-        btn.textContent = "";
-      }
-
-      if (clickCounter === 0) {
-        tracker.textContent = "You lose";
-        playing = false;
-      }
-    }
-  }),
-);
+// missing feature: the adding of buttons isn't smooth
+// missing feature / bug: putting the input-fields.value variables in the init function breaks the game
+// missing feature: when winning ONLY show the number of the winning button
+//

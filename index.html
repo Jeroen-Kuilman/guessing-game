@@ -10,10 +10,11 @@
     <header class="header">
       <h1 class="title">Guess a number!</h1>
     </header>
-    <section class="main">
+
+    <main class="main">
       <article>
-        <h2>Choose a number between 1 and 12</h2>
-        <p class="attempt-counter">Attempts left: 5</p>
+        <h2 class="title-between">Choose a number between 1 and 12</h2>
+        <p class="attempt-counter">Attempts left:4</p>
         <p class="progress-tracker">click to start...</p>
       </article>
 
@@ -31,10 +32,47 @@
         <button class="btn btn-play btn-11">11</button>
         <button class="btn btn-play btn-12">12</button>
       </section>
-      <section class="reset-section">
-        <button class="btn btn-reset">Reset</button>
+
+      <form class="modal hidden">
+        <section class="modal-inputs">
+          <h2 class="modal-title">Choose your preferences!</h2>
+          <label for="choice-amount">How many choices?</label>
+          <input
+            class="input"
+            type="number"
+            name="choice-amount"
+            id="choice-amount"
+            min="4"
+            max="100"
+            placeholder="Between 4 and 100"
+          />
+          <br />
+          <label for="attempt-amount"
+            >How many attempts? (if left empty: 40%)</label
+          >
+          <input
+            class="input"
+            type="number"
+            name="attempt-amount"
+            id="attempt-amount"
+            min="1"
+            max="50"
+            placeholder="Between 1 and 50"
+          />
+        </section>
+
+        <section class="modal-btns">
+          <button class="btn modal-btn btn-confirm">Confirm</button>
+          <button class="btn modal-btn btn-cancel">Cancel</button>
+        </section>
+      </form>
+
+      <section class="options-section">
+        <button class="btn btn-settings btn-reset">Reset</button>
+        <button class="btn btn-settings btn-options">Options</button>
       </section>
-    </section>
+    </main>
+    <div class="overlay hidden"></div>
     <footer class="footer"></footer>
 
     <script src="game.js"></script>
