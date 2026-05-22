@@ -109,6 +109,14 @@ body {
   background-color: green;
 }
 
+.wrong-button span,
+.wrong-button:hover span,
+.right-button span,
+.right-button:hover span {
+  display: inline-block;
+  transform: rotate3d(0, 1, 0, 180deg); /* ✅ counter-rotates the text */
+}
+
 /* Modal window styling */
 .hidden {
   display: none;

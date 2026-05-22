@@ -26,11 +26,12 @@ let num, clickCounter, playing;
 const createPlayButton = (amount) => {
   for (let i = 0; i < amount; i++) {
     const newButton = document.createElement("button");
-    newButton.classList.add("btn", "btn-play", `btn-${i + 13}`, "btn-visible");
+    newButton.classList.add("btn", "btn-play", `btn-${i + 13}`);
     newButton.textContent = i + 13;
     newButton.addEventListener("click", gameLogic); // ✅ attach only to new button
     btnSection.insertAdjacentElement("beforeend", newButton);
   }
+
   btnsPlay = document.querySelectorAll(".btn-play");
 };
 
@@ -53,15 +54,16 @@ const init = function () {
   // inputChoiceAmount.value = "";
   // inputAttemptAmount.value = "";
 
+  // start playing only once the buttons have been reset, not before
+  playing = false;
+  setTimeout(() => (playing = true), 800);
+
   num = randomNumber();
   clickCounter = 4;
-
-  playing = true;
 
   tracker.textContent = "click to start...";
   attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
   titleBetween.textContent = "Choose a number between 1 and 12";
-  createPlayButton(12);
   destroyPlayButton(12);
 
   btnsPlay.forEach((btn) => {
@@ -86,7 +88,7 @@ const gameLogic = function (e) {
       tracker.textContent = `${clickCounter === 1 ? "You win, that was indeed a wise choice!" : "You win, with attempts to spare!"}`;
       btnsPlay.forEach((btn) => {
         btn.classList.add("right-button");
-        btn.textContent = "";
+        btn.innerHTML = `<span>${num}</span>`;
       });
       playing = false;
     } else if (!btn.classList.contains("wrong-button")) {
@@ -100,7 +102,7 @@ const gameLogic = function (e) {
     if (clickCounter === 0) {
       btnsPlay.forEach((btn) => {
         btn.classList.add("wrong-button");
-        btn.textContent = "";
+        btn.innerHTML = `<span>${num}</span>`;
       });
       tracker.textContent = "You lose, that choice wasn't wise...";
       playing = false;
@@ -173,7 +175,9 @@ btnConfirm.addEventListener("click", function (e) {
   closeModal();
 });
 
-// missing feature: the adding of buttons isn't smooth
+// missing feature: the adding / removing of buttons isn't smooth FIXED FOR NOW
+// missing feature: when winning ONLY show the number of the winning button (maybe when losing too) ADDED FOR NOW
+
 // missing feature / bug: putting the input-fields.value variables in the init function breaks the game
-// missing feature: when winning ONLY show the number of the winning button
-//
+// bug: if input choices remain empty while setting the attempts (or leaving everything empty), will result in the game defaulting to the minimum amount of choices
+// created buttons flash shortly when clicked
