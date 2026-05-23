@@ -2,6 +2,7 @@
 
 //elements variables
 const titleBetween = document.querySelector(".title-between");
+const winTracker = document.querySelector(".win-counter");
 const tracker = document.querySelector(".progress-tracker");
 const attemptsCounter = document.querySelector(".attempt-counter");
 const modal = document.querySelector(".modal");
@@ -15,28 +16,40 @@ const inputAttemptAmount = document.querySelector("#attempt-amount");
 let btnsPlay = document.querySelectorAll(".btn-play");
 const btnReset = document.querySelector(".btn-reset");
 const btnOptions = document.querySelector(".btn-options");
+const bntHint = document.querySelector(".btn-hint");
 const btnCancel = document.querySelector(".btn-cancel");
 const btnConfirm = document.querySelector(".btn-confirm");
 
-let num, clickCounter, playing;
+const checkBox = document.querySelector(".checkbox");
+
+let num, clickCounter, playing, lastClickedBtn, lastGameStatus;
+let checkBoxValue = false;
+let winCounter = 0;
+const maxChoice = 100;
 
 ///////////////////////////////////////
 //functions
 //////////////////////////////////////
+
+// generate the random number
+const randomNumber = (num = 12) => Math.ceil(Math.random() * num);
+
+// create new playbuttons
 const createPlayButton = (amount) => {
+  const curAmount = btnsPlay.length;
   for (let i = 0; i < amount; i++) {
     const newButton = document.createElement("button");
-    newButton.classList.add("btn", "btn-play", `btn-${i + 13}`);
+    newButton.classList.add("btn", "btn-play", `btn-${curAmount + i + 1}`);
     newButton.textContent = i + 13;
-    newButton.addEventListener("click", gameLogic); // ✅ attach only to new button
+    newButton.dataset.value = curAmount + i + 1;
+    newButton.addEventListener("click", gameLogic);
     btnSection.insertAdjacentElement("beforeend", newButton);
   }
 
   btnsPlay = document.querySelectorAll(".btn-play");
 };
 
-// current amount = 50
-// (new) amount = 30
+// remove playbuttons
 const destroyPlayButton = (amount) => {
   let curAmount = btnsPlay.length;
 
@@ -47,35 +60,60 @@ const destroyPlayButton = (amount) => {
   btnsPlay = document.querySelectorAll(".btn-play");
 };
 
-const randomNumber = (num = 12) => Math.ceil(Math.random() * num);
-
 // reset game
-const init = function () {
-  // inputChoiceAmount.value = "";
-  // inputAttemptAmount.value = "";
-
-  // start playing only once the buttons have been reset, not before
+const init = function (
+  choiceAmount = 12,
+  attemptAmount,
+  keepPreferences = checkBoxValue,
+) {
+  // start playing only once the playbuttons have been reset, not before
   playing = false;
-  setTimeout(() => (playing = true), 800);
+  setTimeout(() => (playing = true), 1200);
 
-  num = randomNumber();
-  clickCounter = 4;
+  const activeChoiceAmount = keepPreferences ? btnsPlay.length : choiceAmount;
+  clickCounter = attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
+  console.log(activeChoiceAmount);
+  //new random number
+  num = randomNumber(activeChoiceAmount);
 
-  tracker.textContent = "click to start...";
+  //reset playbuttons and attempts and lastClickedBtn
+  if (btnsPlay.length > activeChoiceAmount) {
+    destroyPlayButton(activeChoiceAmount);
+  } else if (btnsPlay.length < activeChoiceAmount) {
+    createPlayButton(activeChoiceAmount - btnsPlay.length); // ✅ adds missing buttons
+  }
+
+  lastClickedBtn = 0;
+
+  //reset text
+  tracker.textContent =
+    lastGameStatus === 1
+      ? "Let's keep that winning streak going!"
+      : "Maybe this time, you have better luck!";
   attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
-  titleBetween.textContent = "Choose a number between 1 and 12";
-  destroyPlayButton(12);
 
+  titleBetween.textContent = `Choose a number between 1 and ${activeChoiceAmount}`;
+  inputChoiceAmount.value = "";
+  inputAttemptAmount.value = "";
+  //remove playbutton effects and hide them
   btnsPlay.forEach((btn) => {
     btn.classList.remove("right-button", "wrong-button", "btn-visible");
     btn.removeAttribute("style");
   });
 
   setTimeout(() => {
-    btnsPlay.forEach((btn, i) => {
-      btn.textContent = i + 1;
-      btn.classList.add("btn-visible");
-    });
+    // make the resetted playbuttons visible again
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i >= btnsPlay.length) {
+        clearInterval(interval);
+        return;
+      }
+      btnsPlay[i].textContent = i + 1;
+      btnsPlay[i].dataset.value = i + 1;
+      btnsPlay[i].classList.add("btn-visible");
+      i++;
+    }, 30);
   }, 800);
 };
 
@@ -85,13 +123,17 @@ const gameLogic = function (e) {
 
   if (playing) {
     if (+btn.textContent === num) {
+      lastGameStatus = 1;
+      winCounter++;
+      winTracker.textContent = `Your current winning streak: ${winCounter}`;
       tracker.textContent = `${clickCounter === 1 ? "You win, that was indeed a wise choice!" : "You win, with attempts to spare!"}`;
       btnsPlay.forEach((btn) => {
         btn.classList.add("right-button");
-        btn.innerHTML = `<span>${num}</span>`;
+        btn.innerHTML = `<span>${+btn.dataset.value === num ? num : ""}</span>`;
       });
       playing = false;
     } else if (!btn.classList.contains("wrong-button")) {
+      lastClickedBtn = btn.dataset.value;
       clickCounter--;
       tracker.textContent = `${clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
       attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
@@ -100,9 +142,12 @@ const gameLogic = function (e) {
     }
 
     if (clickCounter === 0) {
+      lastGameStatus = -1;
+      winCounter = 0;
+      winTracker.textContent = "Your current winning streak: 0";
       btnsPlay.forEach((btn) => {
         btn.classList.add("wrong-button");
-        btn.innerHTML = `<span>${num}</span>`;
+        btn.innerHTML = `<span>${+btn.dataset.value === num ? num : ""}</span>`;
       });
       tracker.textContent = "You lose, that choice wasn't wise...";
       playing = false;
@@ -122,7 +167,15 @@ const closeModal = function () {
 
 //options logic
 const optionsLogic = function () {
-  const newChoiceAmount = Math.min(100, Math.max(4, +inputChoiceAmount.value));
+  // const newChoiceAmount = Math.min(
+  //   maxChoice,
+  //   Math.max(4, +inputChoiceAmount.value),
+  // );
+
+  const newChoiceAmount = Math.min(
+    maxChoice,
+    Math.max(4, +inputChoiceAmount.value),
+  );
   const newAttemptAmount = Math.min(50, Math.max(1, +inputAttemptAmount.value));
   const curAmount = btnsPlay.length;
 
@@ -146,17 +199,51 @@ const optionsLogic = function () {
   titleBetween.textContent = `Choose a number between 1 and ${newChoiceAmount}`;
 };
 
+// some fun hints
+const getHint = function () {
+  if (playing)
+    if (lastClickedBtn !== 0) {
+      tracker.textContent =
+        lastClickedBtn > num ? "Maybe lower?" : "Maybe higher?";
+    } else {
+      tracker.textContent = `Maybe try first before you start asking for help?`;
+    }
+
+  if (!playing) {
+    const curAmount = btnsPlay.length;
+    tracker.textContent = `You already know the answer, it's:`;
+    btnsPlay.forEach((btn) => {
+      btn.classList.remove("btn-visible");
+    });
+    setTimeout(() => {
+      btnsPlay.forEach((btn) => {
+        btn.innerHTML = `<span>${num}</span>`;
+        btn.classList.add("btn-visible");
+      });
+    }, 1000);
+  }
+};
+
 /////////////////////////////////////
 //eventhandlers
 /////////////////////////////////////
 //logic for clicking the play buttons
 init();
+console.log(
+  "%cTrying to cheat, huh? Well I won't stop you, but you never guess the variable name of the random %cnum%c, which you need to cheat your way to the right answer! %c*cough cough*",
+  "font-size: 30px; background-color:#f5f5e9; color: black;",
+  "font-size: 30px; background-color:#f5f5e9; color: black; text-decoration: underline dashed 4px red;font-weight: bold;",
+  "font-size: 30px; background-color:#f5f5e9; color: black;",
+  "font-size: 30px; background-color:#f5f5e9; color: black; font-weight: bold;",
+);
 
 // click for reset
-btnReset.addEventListener("click", init);
+btnReset.addEventListener("click", () => init());
 
 // click to guess
-btnsPlay.forEach((btn) => btn.addEventListener("click", gameLogic));
+btnSection.addEventListener("click", function (e) {
+  if (e.target.classList.contains("btn-play")) gameLogic(e);
+});
 
 // click to open options
 btnOptions.addEventListener("click", openModal);
@@ -170,14 +257,33 @@ btnCancel.addEventListener("click", function (e) {
 // click to confirm options
 btnConfirm.addEventListener("click", function (e) {
   e.preventDefault();
-  init();
+  const newChoiceAmount = Math.min(
+    maxChoice,
+    Math.max(4, +inputChoiceAmount.value),
+  );
+  const newAttemptAmount = inputAttemptAmount.value
+    ? Math.min(50, Math.max(1, +inputAttemptAmount.value))
+    : undefined;
   optionsLogic();
+  init(newChoiceAmount, newAttemptAmount, checkBoxValue);
   closeModal();
 });
 
-// missing feature: the adding / removing of buttons isn't smooth FIXED FOR NOW
-// missing feature: when winning ONLY show the number of the winning button (maybe when losing too) ADDED FOR NOW
+// click to get an hint
+bntHint.addEventListener("click", getHint);
 
-// missing feature / bug: putting the input-fields.value variables in the init function breaks the game
+// checkbox
+checkBox.addEventListener("change", function () {
+  checkBoxValue = this.checked;
+  console.log(checkBoxValue);
+});
+
+// change checkbox true
+//
+
+// missing feature: the adding / removing of buttons isn't smooth FIXED FOR NOW
+
 // bug: if input choices remain empty while setting the attempts (or leaving everything empty), will result in the game defaulting to the minimum amount of choices
-// created buttons flash shortly when clicked
+// bug: created buttons flash shortly when clicked
+// bug: setting a custom attempts amount doesn't work anymore
+// bug: if reset is pressed while hints isn't done with its timer function, after a game ended, the resetted buttons for the next game will all show the answer.

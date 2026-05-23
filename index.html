@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,31 +11,53 @@
       <h1 class="title">Guess a number!</h1>
     </header>
 
-    <main class="main">
-      <article>
-        <h2 class="title-between">Choose a number between 1 and 12</h2>
-        <p class="attempt-counter">Attempts left:4</p>
-        <p class="progress-tracker">click to start...</p>
-      </article>
+    <div class="content">
+      <aside class="side-bar">
+        <h2>The choice is yours!</h2>
+        <section class="game-rules">
+          <h3 class="title-between">Choose a number between 1 and 12</h3>
+          <h4>Current game:</h4>
+          <ul>
+            <li><p class="win-counter">Your current winning streak: 0</p></li>
+            <li><p class="attempt-counter">Attempts left: 4</p></li>
+            <li><p class="progress-tracker">click to start...</p></li>
+          </ul>
+        </section>
 
-      <section class="btn-section">
-        <button class="btn btn-play btn-1">1</button>
-        <button class="btn btn-play btn-2">2</button>
-        <button class="btn btn-play btn-3">3</button>
-        <button class="btn btn-play btn-4">4</button>
-        <button class="btn btn-play btn-5">5</button>
-        <button class="btn btn-play btn-6">6</button>
-        <button class="btn btn-play btn-7">7</button>
-        <button class="btn btn-play btn-8">8</button>
-        <button class="btn btn-play btn-9">9</button>
-        <button class="btn btn-play btn-10">10</button>
-        <button class="btn btn-play btn-11">11</button>
-        <button class="btn btn-play btn-12">12</button>
-      </section>
+        <section class="stats">
+          <h3>Welcome unknown player!</h3>
+          <h4>Your stats (WIP):</h4>
+        </section>
 
-      <form class="modal hidden">
-        <section class="modal-inputs">
-          <h2 class="modal-title">Choose your preferences!</h2>
+        <section class="options-section">
+          <button class="btn btn-settings btn-options">Options</button>
+          <button class="btn btn-settings btn-hint">hint?</button>
+          <button class="btn btn-settings btn-reset">Reset</button>
+        </section>
+      </aside>
+
+      <main class="main">
+        <section class="btn-section">
+          <button class="btn btn-play btn-1">1</button>
+          <button class="btn btn-play btn-2">2</button>
+          <button class="btn btn-play btn-3">3</button>
+          <button class="btn btn-play btn-4">4</button>
+          <button class="btn btn-play btn-5">5</button>
+          <button class="btn btn-play btn-6">6</button>
+          <button class="btn btn-play btn-7">7</button>
+          <button class="btn btn-play btn-8">8</button>
+          <button class="btn btn-play btn-9">9</button>
+          <button class="btn btn-play btn-10">10</button>
+          <button class="btn btn-play btn-11">11</button>
+          <button class="btn btn-play btn-12">12</button>
+        </section>
+      </main>
+    </div>
+
+    <form class="modal hidden">
+      <section class="modal-inputs">
+        <h2 class="modal-title">Choose your preferences!</h2>
+        <div class="input-group">
           <label for="choice-amount">How many choices?</label>
           <input
             class="input"
@@ -46,7 +68,8 @@
             max="100"
             placeholder="Between 4 and 100"
           />
-          <br />
+        </div>
+        <div class="input-group">
           <label for="attempt-amount"
             >How many attempts? (if left empty: 40%)</label
           >
@@ -59,19 +82,26 @@
             max="50"
             placeholder="Between 1 and 50"
           />
-        </section>
-
-        <section class="modal-btns">
-          <button class="btn modal-btn btn-confirm">Confirm</button>
-          <button class="btn modal-btn btn-cancel">Cancel</button>
-        </section>
-      </form>
-
-      <section class="options-section">
-        <button class="btn btn-settings btn-reset">Reset</button>
-        <button class="btn btn-settings btn-options">Options</button>
+        </div>
+        <div class="input-group">
+          <label for="prevent-reset"
+            >Do you want these settings to remain if you reset?
+          </label>
+          <input
+            class="input checkbox"
+            type="checkbox"
+            name="prevent-reset"
+            id="prevent-reset"
+            value="true"
+          />
+        </div>
       </section>
-    </main>
+      <section class="modal-btns">
+        <button class="btn modal-btn btn-confirm">Confirm</button>
+        <button class="btn modal-btn btn-cancel">Cancel</button>
+      </section>
+    </form>
+
     <div class="overlay hidden"></div>
     <footer class="footer"></footer>
 
