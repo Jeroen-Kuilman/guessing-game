@@ -3,7 +3,7 @@
 //elements variables
 const titleBetween = document.querySelector(".title-between");
 const winTracker = document.querySelector(".win-counter");
-const tracker = document.querySelector(".progress-tracker");
+const feedbackText = document.querySelector(".feedback-text");
 const attemptsCounter = document.querySelector(".attempt-counter");
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
@@ -16,14 +16,14 @@ const inputAttemptAmount = document.querySelector("#attempt-amount");
 let btnsPlay = document.querySelectorAll(".btn-play");
 const btnReset = document.querySelector(".btn-reset");
 const btnOptions = document.querySelector(".btn-options");
-const bntHint = document.querySelector(".btn-hint");
+const btnHint = document.querySelector(".btn-hint");
 const btnCancel = document.querySelector(".btn-cancel");
 const btnConfirm = document.querySelector(".btn-confirm");
 
 const checkBox = document.querySelector(".checkbox");
 
-const maxChoice = 100;
-const defaultChoiceAmount = 12;
+const MAX_CHOICE = 100;
+const DEFAULT_CHOICE_AMOUNT = 12;
 
 ///////////////////////////////////////
 //objects
@@ -38,7 +38,7 @@ const state = {
 };
 
 const settings = {
-  choiceAmount: defaultChoiceAmount,
+  choiceAmount: DEFAULT_CHOICE_AMOUNT,
   attemptAmount: null,
   keepPreferences: false,
 };
@@ -106,7 +106,7 @@ const resetState = function (activeChoiceAmount) {
 
 const renderReset = function (activeChoiceAmount) {
   //reset text
-  tracker.textContent =
+  feedbackText.textContent =
     state.lastGameStatus === 1
       ? "Let's keep that winning streak going! 🔥🔥🔥"
       : "Maybe this time, you have better luck!🍀";
@@ -154,7 +154,7 @@ const gameLogic = function (e) {
       state.lastGameStatus = 1;
       state.winCounter++;
       winTracker.textContent = `Your current winning streak: ${state.winCounter}`;
-      tracker.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
+      feedbackText.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
       btnsPlay.forEach((btn) => {
         btn.classList.add("right-button");
         btn.innerHTML = `<span>${+btn.dataset.value === state.rightAnswer ? state.rightAnswer : ""}</span>`;
@@ -163,7 +163,7 @@ const gameLogic = function (e) {
     } else if (!btn.classList.contains("wrong-button")) {
       state.lastClickedBtn = btn.dataset.value;
       state.clickCounter--;
-      tracker.textContent = `${state.clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
+      feedbackText.textContent = `${state.clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
       attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
       btn.classList.add("wrong-button");
       btn.textContent = "";
@@ -177,7 +177,7 @@ const gameLogic = function (e) {
         btn.classList.add("wrong-button");
         btn.innerHTML = `<span>${+btn.dataset.value === state.rightAnswer ? state.rightAnswer : ""}</span>`;
       });
-      tracker.textContent = "You lose, that choice wasn't wise... ☠️";
+      feedbackText.textContent = "You lose, that choice wasn't wise... ☠️";
       state.playing = false;
     }
   }
@@ -195,18 +195,19 @@ const closeModal = function () {
 
 // some fun hints
 const getHint = function () {
-  if (state.playing)
+  if (state.playing) {
     if (state.lastClickedBtn !== 0) {
-      tracker.textContent =
+      feedbackText.textContent =
         state.lastClickedBtn > state.rightAnswer
           ? "Maybe lower? 🤔"
           : "Maybe higher? 🫤";
     } else {
-      tracker.textContent = `Maybe try first before you start asking for help? 🤨`;
+      feedbackText.textContent = `Maybe try first before you start asking for help? 🤨`;
     }
+  }
 
   if (!state.playing) {
-    tracker.innerHTML = `You already know the answer, it's: <span style='font-size:2rem;'>&#8680;</span>`;
+    feedbackText.innerHTML = `You already know the answer, it's: <span style='font-size:2rem;'>&#8680;</span>`;
     btnsPlay.forEach((btn) => {
       btn.classList.remove("btn-visible");
     });
@@ -223,7 +224,7 @@ const getHint = function () {
 //eventhandlers
 /////////////////////////////////////
 //logic for clicking the play buttons
-init(defaultChoiceAmount);
+init(DEFAULT_CHOICE_AMOUNT);
 
 console.log(
   "%cTrying to cheat, huh? Well I won't stop you, but you never guess the variable name of the %crandNum%c, which you need to cheat your way to the right answer! %c*cough cough*",
@@ -237,7 +238,7 @@ console.log(
 btnReset.addEventListener("click", function (e) {
   const preferenceChoiceAmount = settings.keepPreferences
     ? settings.choiceAmount
-    : defaultChoiceAmount;
+    : DEFAULT_CHOICE_AMOUNT;
 
   init(preferenceChoiceAmount);
 });
@@ -260,7 +261,7 @@ btnCancel.addEventListener("click", function (e) {
 btnConfirm.addEventListener("click", function (e) {
   e.preventDefault();
   settings.choiceAmount = Math.min(
-    maxChoice,
+    MAX_CHOICE,
     Math.max(4, +inputChoiceAmount.value),
   );
 
@@ -273,7 +274,7 @@ btnConfirm.addEventListener("click", function (e) {
 });
 
 // click to get an hint
-bntHint.addEventListener("click", getHint);
+btnHint.addEventListener("click", getHint);
 
 // checkbox
 checkBox.addEventListener("change", function () {
