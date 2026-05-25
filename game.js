@@ -28,12 +28,19 @@ const DEFAULT_CHOICE_AMOUNT = 12;
 ///////////////////////////////////////
 //objects
 ///////////////////////////////////////
+const GAME_STATUS = Object.freeze({
+  DEFAULT: "default",
+  WIN: "win",
+  LOSS: "loss",
+  RESET_EARLY: "reset_early",
+});
+
 const state = {
   rightAnswer: 0,
   clickCounter: 0,
   playing: false,
   lastClickedBtn: 0,
-  lastGameStatus: 0,
+  lastGameStatus: GAME_STATUS.DEFAULT,
   winCounter: 0,
 };
 
@@ -106,10 +113,18 @@ const resetState = function (activeChoiceAmount) {
 
 const renderReset = function (activeChoiceAmount) {
   //reset text
-  feedbackText.textContent =
-    state.lastGameStatus === 1
-      ? "Let's keep that winning streak going! 🔥🔥🔥"
-      : "Maybe this time, you have better luck!🍀";
+
+  if (state.lastGameStatus === GAME_STATUS.WIN) {
+    feedbackText.textContent = "Let's keep that winning streak going! 🔥🔥🔥";
+  } else if (state.lastGameStatus === GAME_STATUS.LOSS) {
+    feedbackText.textContent = "Maybe this time, you have better luck!🍀";
+  } else if (state.lastGameStatus === GAME_STATUS.RESET_EARLY) {
+    winTracker.textContent = "Your current winning streak: 0";
+    feedbackText.textContent =
+      "Your streak has ended due to resetting early 😭";
+  } else {
+    feedbackText.textContent = "Click to Start...";
+  }
   attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
 
   titleBetween.textContent = `Choose a number between 1 and ${activeChoiceAmount}`;
@@ -139,7 +154,7 @@ const renderReset = function (activeChoiceAmount) {
 
 const init = function (activeChoiceAmount) {
   if (state.playing) {
-    winTracker.textContent = "Your current winning streak: 0";
+    state.lastGameStatus = GAME_STATUS.RESET_EARLY;
   }
   resetState(activeChoiceAmount);
   renderReset(activeChoiceAmount);
@@ -151,7 +166,7 @@ const gameLogic = function (e) {
 
   if (state.playing) {
     if (+btn.textContent === state.rightAnswer) {
-      state.lastGameStatus = 1;
+      state.lastGameStatus = GAME_STATUS.WIN;
       state.winCounter++;
       winTracker.textContent = `Your current winning streak: ${state.winCounter}`;
       feedbackText.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
@@ -170,7 +185,7 @@ const gameLogic = function (e) {
     }
 
     if (state.clickCounter === 0) {
-      state.lastGameStatus = -1;
+      state.lastGameStatus = GAME_STATUS.LOSS;
       state.winCounter = 0;
       winTracker.textContent = "Your current winning streak: 0";
       btnsPlay.forEach((btn) => {
