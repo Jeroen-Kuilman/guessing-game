@@ -38,10 +38,11 @@ const state = {
 };
 
 const settings = {
-  choiceAmount: 12,
+  choiceAmount: defaultChoiceAmount,
   attemptAmount: null,
   keepPreferences: false,
 };
+
 ///////////////////////////////////////
 //functions
 //////////////////////////////////////
@@ -77,7 +78,7 @@ const destroyPlayButton = (amount) => {
 };
 
 // reset game
-const init = function (activeChoiceAmount) {
+const resetState = function (activeChoiceAmount) {
   const INITIAL_DELAY = 800;
   const INTERVAL_SPEED = 30;
   const totalTime = INITIAL_DELAY + activeChoiceAmount * INTERVAL_SPEED;
@@ -91,7 +92,7 @@ const init = function (activeChoiceAmount) {
 
   //new random number
   state.rightAnswer = randomNumber(activeChoiceAmount);
-  randNum = randomNumber(settings.choiceAmount);
+  randNum = randomNumber(activeChoiceAmount);
 
   //reset playbuttons and attempts and lastClickedBtn
   if (btnsPlay.length >= activeChoiceAmount) {
@@ -101,7 +102,9 @@ const init = function (activeChoiceAmount) {
   }
 
   state.lastClickedBtn = 0;
+};
 
+const renderReset = function (activeChoiceAmount) {
   //reset text
   tracker.textContent =
     state.lastGameStatus === 1
@@ -132,6 +135,14 @@ const init = function (activeChoiceAmount) {
       i++;
     }, 30);
   }, 800);
+};
+
+const init = function (activeChoiceAmount) {
+  if (state.playing) {
+    winTracker.textContent = "Your current winning streak: 0";
+  }
+  resetState(activeChoiceAmount);
+  renderReset(activeChoiceAmount);
 };
 
 // The gameplay loop
@@ -182,8 +193,6 @@ const closeModal = function () {
   overlay.classList.add("hidden");
 };
 
-//options logic
-
 // some fun hints
 const getHint = function () {
   if (state.playing)
@@ -197,7 +206,6 @@ const getHint = function () {
     }
 
   if (!state.playing) {
-    const curAmount = btnsPlay.length;
     tracker.innerHTML = `You already know the answer, it's: <span style='font-size:2rem;'>&#8680;</span>`;
     btnsPlay.forEach((btn) => {
       btn.classList.remove("btn-visible");
@@ -216,6 +224,7 @@ const getHint = function () {
 /////////////////////////////////////
 //logic for clicking the play buttons
 init(defaultChoiceAmount);
+
 console.log(
   "%cTrying to cheat, huh? Well I won't stop you, but you never guess the variable name of the %crandNum%c, which you need to cheat your way to the right answer! %c*cough cough*",
   "font-size: 30px; background-color:#f5f5e9; color: black;",
@@ -273,6 +282,6 @@ checkBox.addEventListener("change", function () {
 
 // future feature: stats per person
 // future feature: If the game gets reset when playing, winning streak = 0
-// fake random number should also reset
+// future feature: add an option to keep attempts preferences too, without breaking the default logic
 
 // clean up: init, and options logic, add state object, improve names
