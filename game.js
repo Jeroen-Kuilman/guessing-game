@@ -1,6 +1,6 @@
 "use strict";
 
-//elements variables
+// elements variables
 const titleBetween = document.querySelector(".title-between");
 const winTracker = document.querySelector(".win-counter");
 const feedbackText = document.querySelector(".feedback-text");
@@ -9,10 +9,12 @@ const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnSection = document.querySelector(".btn-section");
 
+// input variables
 const inputChoiceAmount = document.querySelector("#choice-amount");
 const inputAttemptAmount = document.querySelector("#attempt-amount");
+const checkBox = document.querySelector(".checkbox");
 
-//button variable
+// button variable
 let btnsPlay = document.querySelectorAll(".btn-play");
 const btnReset = document.querySelector(".btn-reset");
 const btnOptions = document.querySelector(".btn-options");
@@ -20,13 +22,12 @@ const btnHint = document.querySelector(".btn-hint");
 const btnCancel = document.querySelector(".btn-cancel");
 const btnConfirm = document.querySelector(".btn-confirm");
 
-const checkBox = document.querySelector(".checkbox");
-
+// default variables
 const MAX_CHOICE = 100;
 const DEFAULT_CHOICE_AMOUNT = 12;
 
 ///////////////////////////////////////
-//objects
+// objects
 ///////////////////////////////////////
 const GAME_STATUS = Object.freeze({
   DEFAULT: "default",
@@ -39,7 +40,7 @@ const state = {
   rightAnswer: 0,
   clickCounter: 0,
   playing: false,
-  lastClickedBtn: 0,
+  lastGuessedValue: 0,
   lastGameStatus: GAME_STATUS.DEFAULT,
   winCounter: 0,
 };
@@ -51,12 +52,13 @@ const settings = {
 };
 
 ///////////////////////////////////////
-//functions
+// functions
 //////////////////////////////////////
+// creation of the right answer
 const randomNumber = (max) => Math.ceil(Math.random() * max);
-let randNum;
 
 // this is a dummy number to fool people using the console
+let randNum;
 
 // create new playbuttons
 const createPlayButton = (amount) => {
@@ -74,7 +76,7 @@ const createPlayButton = (amount) => {
 };
 
 // remove playbuttons
-const destroyPlayButton = (amount) => {
+const removePlayButton = (amount) => {
   let curAmount = btnsPlay.length;
 
   while (curAmount > amount) {
@@ -84,60 +86,65 @@ const destroyPlayButton = (amount) => {
   btnsPlay = document.querySelectorAll(".btn-play");
 };
 
-// reset game
+// reset the game state
 const resetState = function (activeChoiceAmount) {
+  const { attemptAmount } = settings;
+
   const INITIAL_DELAY = 800;
   const INTERVAL_SPEED = 30;
   const totalTime = INITIAL_DELAY + activeChoiceAmount * INTERVAL_SPEED;
 
   // start playing only once the playbuttons have been reset, not before
   state.playing = false;
-
-  state.clickCounter =
-    settings.attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
   setTimeout(() => (state.playing = true), totalTime);
 
-  //new random number
+  // reset the click counter
+  state.clickCounter = attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
+
+  // new random number and dummy number
   state.rightAnswer = randomNumber(activeChoiceAmount);
   randNum = randomNumber(activeChoiceAmount);
 
-  //reset playbuttons and attempts and lastClickedBtn
+  // reset playbuttons and attempts and lastGuessedValue
   if (btnsPlay.length >= activeChoiceAmount) {
-    destroyPlayButton(activeChoiceAmount);
+    removePlayButton(activeChoiceAmount);
   } else {
     createPlayButton(activeChoiceAmount - btnsPlay.length);
   }
-
-  state.lastClickedBtn = 0;
+  // reset the last guessed value
+  state.lastGuessedValue = 0;
 };
 
-const renderReset = function (activeChoiceAmount) {
-  //reset text
+// reset the gameboard, both text and animations
+const renderGameBoard = function (activeChoiceAmount) {
+  const { lastGameStatus } = state;
 
-  if (state.lastGameStatus === GAME_STATUS.WIN) {
+  // reset text
+  if (lastGameStatus === GAME_STATUS.WIN) {
     feedbackText.textContent = "Let's keep that winning streak going! 🔥🔥🔥";
-  } else if (state.lastGameStatus === GAME_STATUS.LOSS) {
+  } else if (lastGameStatus === GAME_STATUS.LOSS) {
     feedbackText.textContent = "Maybe this time, you have better luck!🍀";
-  } else if (state.lastGameStatus === GAME_STATUS.RESET_EARLY) {
+  } else if (lastGameStatus === GAME_STATUS.RESET_EARLY) {
     winTracker.textContent = "Your current winning streak: 0";
     feedbackText.textContent =
       "Your streak has ended due to resetting early 😭";
   } else {
     feedbackText.textContent = "Click to Start...";
   }
+
   attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
 
   titleBetween.textContent = `Choose a number between 1 and ${activeChoiceAmount}`;
   inputChoiceAmount.value = "";
   inputAttemptAmount.value = "";
-  //remove playbutton effects and hide them
+
+  // reset animations
   btnsPlay.forEach((btn) => {
     btn.classList.remove("right-button", "wrong-button", "btn-visible");
     btn.removeAttribute("style");
   });
 
   setTimeout(() => {
-    // make the resetted playbuttons visible again
     let i = 0;
     const interval = setInterval(() => {
       if (i >= btnsPlay.length) {
@@ -152,31 +159,33 @@ const renderReset = function (activeChoiceAmount) {
   }, 800);
 };
 
+// wrap the reset functions and a safeguard for when resetting early
 const init = function (activeChoiceAmount) {
   if (state.playing) {
     state.lastGameStatus = GAME_STATUS.RESET_EARLY;
   }
   resetState(activeChoiceAmount);
-  renderReset(activeChoiceAmount);
+  renderGameBoard(activeChoiceAmount);
 };
 
-// The gameplay loop
+// the gameplay loop
 const gameLogic = function (e) {
   const btn = e.target;
+  const { rightAnswer } = state;
 
   if (state.playing) {
-    if (+btn.textContent === state.rightAnswer) {
+    if (+btn.textContent === rightAnswer) {
       state.lastGameStatus = GAME_STATUS.WIN;
       state.winCounter++;
       winTracker.textContent = `Your current winning streak: ${state.winCounter}`;
       feedbackText.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
       btnsPlay.forEach((btn) => {
         btn.classList.add("right-button");
-        btn.innerHTML = `<span>${+btn.dataset.value === state.rightAnswer ? state.rightAnswer : ""}</span>`;
+        btn.innerHTML = `<span>${+btn.dataset.value === rightAnswer ? rightAnswer : ""}</span>`;
       });
       state.playing = false;
     } else if (!btn.classList.contains("wrong-button")) {
-      state.lastClickedBtn = btn.dataset.value;
+      state.lastGuessedValue = btn.dataset.value;
       state.clickCounter--;
       feedbackText.textContent = `${state.clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
       attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
@@ -190,7 +199,7 @@ const gameLogic = function (e) {
       winTracker.textContent = "Your current winning streak: 0";
       btnsPlay.forEach((btn) => {
         btn.classList.add("wrong-button");
-        btn.innerHTML = `<span>${+btn.dataset.value === state.rightAnswer ? state.rightAnswer : ""}</span>`;
+        btn.innerHTML = `<span>${+btn.dataset.value === rightAnswer ? rightAnswer : ""}</span>`;
       });
       feedbackText.textContent = "You lose, that choice wasn't wise... ☠️";
       state.playing = false;
@@ -209,26 +218,25 @@ const closeModal = function () {
 };
 
 // some fun hints
-const getHint = function () {
-  if (state.playing) {
-    if (state.lastClickedBtn !== 0) {
+const showHint = function () {
+  const { playing, lastGuessedValue, rightAnswer } = state;
+  if (playing) {
+    if (lastGuessedValue !== 0) {
       feedbackText.textContent =
-        state.lastClickedBtn > state.rightAnswer
-          ? "Maybe lower? 🤔"
-          : "Maybe higher? 🫤";
+        lastGuessedValue > rightAnswer ? "Maybe lower? 🤔" : "Maybe higher? 🫤";
     } else {
       feedbackText.textContent = `Maybe try first before you start asking for help? 🤨`;
     }
   }
 
-  if (!state.playing) {
+  if (!playing) {
     feedbackText.innerHTML = `You already know the answer, it's: <span style='font-size:2rem;'>&#8680;</span>`;
     btnsPlay.forEach((btn) => {
       btn.classList.remove("btn-visible");
     });
     setTimeout(() => {
       btnsPlay.forEach((btn) => {
-        btn.innerHTML = `<span>${state.rightAnswer}</span>`;
+        btn.innerHTML = `<span>${rightAnswer}</span>`;
         btn.classList.add("btn-visible");
       });
     }, 1000);
@@ -236,11 +244,13 @@ const getHint = function () {
 };
 
 /////////////////////////////////////
-//eventhandlers
+// eventhandlers
 /////////////////////////////////////
-//logic for clicking the play buttons
+
+// making sure every value is properly set when the game is first loaded
 init(DEFAULT_CHOICE_AMOUNT);
 
+// console text to fool people into using the dummy number
 console.log(
   "%cTrying to cheat, huh? Well I won't stop you, but you never guess the variable name of the %crandNum%c, which you need to cheat your way to the right answer! %c*cough cough*",
   "font-size: 30px; background-color:#f5f5e9; color: black;",
@@ -251,8 +261,10 @@ console.log(
 
 // click for reset
 btnReset.addEventListener("click", function (e) {
-  const preferenceChoiceAmount = settings.keepPreferences
-    ? settings.choiceAmount
+  const { keepPreferences, choiceAmount } = settings;
+
+  const preferenceChoiceAmount = keepPreferences
+    ? choiceAmount
     : DEFAULT_CHOICE_AMOUNT;
 
   init(preferenceChoiceAmount);
@@ -263,16 +275,16 @@ btnSection.addEventListener("click", function (e) {
   if (e.target.classList.contains("btn-play")) gameLogic(e);
 });
 
-// click to open options
+// click to open options window
 btnOptions.addEventListener("click", openModal);
 
-// click to cancel options
+// click to cancel options window
 btnCancel.addEventListener("click", function (e) {
   e.preventDefault();
   closeModal();
 });
 
-// click to confirm options
+// click to confirm new settings in the options window
 btnConfirm.addEventListener("click", function (e) {
   e.preventDefault();
   settings.choiceAmount = Math.min(
@@ -288,16 +300,18 @@ btnConfirm.addEventListener("click", function (e) {
   closeModal();
 });
 
-// click to get an hint
-btnHint.addEventListener("click", getHint);
-
-// checkbox
+// checkbox to save settings
 checkBox.addEventListener("change", function () {
   settings.keepPreferences = this.checked;
 });
 
-// future feature: stats per person
-// future feature: If the game gets reset when playing, winning streak = 0
-// future feature: add an option to keep attempts preferences too, without breaking the default logic
+// click to receive a hint
+btnHint.addEventListener("click", showHint);
 
-// clean up: init, and options logic, add state object, improve names
+//////////////////////////////////////
+// future features, current bugs and other issues
+//////////////////////////////////////
+
+// future feature: stats per person
+// future feature: dynamically limit the amount of hinst per choices or attempts.
+// future feature: add an option to keep attempts preferences too, without breaking the default logic
