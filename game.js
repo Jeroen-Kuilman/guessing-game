@@ -23,6 +23,7 @@ const btnConfirm = document.querySelector(".btn-confirm");
 const checkBox = document.querySelector(".checkbox");
 
 const maxChoice = 100;
+const defaultChoiceAmount = 12;
 
 ///////////////////////////////////////
 //objects
@@ -41,14 +42,13 @@ const settings = {
   attemptAmount: null,
   keepPreferences: false,
 };
-
 ///////////////////////////////////////
 //functions
 //////////////////////////////////////
 const randomNumber = (max) => Math.ceil(Math.random() * max);
+let randNum;
 
 // this is a dummy number to fool people using the console
-const randNum = (max) => Math.ceil(Math.random() * max);
 
 // create new playbuttons
 const createPlayButton = (amount) => {
@@ -77,10 +77,7 @@ const destroyPlayButton = (amount) => {
 };
 
 // reset game
-const init = function () {
-  const activeChoiceAmount = settings.keepPreferences
-    ? btnsPlay.length
-    : settings.choiceAmount;
+const init = function (activeChoiceAmount) {
   const INITIAL_DELAY = 800;
   const INTERVAL_SPEED = 30;
   const totalTime = INITIAL_DELAY + activeChoiceAmount * INTERVAL_SPEED;
@@ -90,10 +87,11 @@ const init = function () {
 
   state.clickCounter =
     settings.attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
-  //new random number
   setTimeout(() => (state.playing = true), totalTime);
+
+  //new random number
   state.rightAnswer = randomNumber(activeChoiceAmount);
-  randNum(activeChoiceAmount);
+  randNum = randomNumber(settings.choiceAmount);
 
   //reset playbuttons and attempts and lastClickedBtn
   if (btnsPlay.length >= activeChoiceAmount) {
@@ -217,7 +215,7 @@ const getHint = function () {
 //eventhandlers
 /////////////////////////////////////
 //logic for clicking the play buttons
-init();
+init(defaultChoiceAmount);
 console.log(
   "%cTrying to cheat, huh? Well I won't stop you, but you never guess the variable name of the %crandNum%c, which you need to cheat your way to the right answer! %c*cough cough*",
   "font-size: 30px; background-color:#f5f5e9; color: black;",
@@ -227,7 +225,13 @@ console.log(
 );
 
 // click for reset
-btnReset.addEventListener("click", () => init());
+btnReset.addEventListener("click", function (e) {
+  const preferenceChoiceAmount = settings.keepPreferences
+    ? settings.choiceAmount
+    : defaultChoiceAmount;
+
+  init(preferenceChoiceAmount);
+});
 
 // click to guess
 btnSection.addEventListener("click", function (e) {
@@ -250,12 +254,12 @@ btnConfirm.addEventListener("click", function (e) {
     maxChoice,
     Math.max(4, +inputChoiceAmount.value),
   );
+
   settings.attemptAmount = inputAttemptAmount.value
     ? Math.min(50, Math.max(1, +inputAttemptAmount.value))
     : null;
 
-  settings.keepPreferences;
-  init();
+  init(settings.choiceAmount);
   closeModal();
 });
 
