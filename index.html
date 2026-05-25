@@ -14,7 +14,7 @@
     <div class="content">
       <aside class="side-bar">
         <h2>The choice is yours!</h2>
-        <section class="game-rules">
+        <section class="game-status">
           <h3 class="title-between">Choose a number between 1 and 12</h3>
           <h4>Current game:</h4>
           <ul>
@@ -51,61 +51,61 @@
           <button class="btn btn-play btn-11">11</button>
           <button class="btn btn-play btn-12">12</button>
         </section>
+
+        <form class="modal hidden">
+          <section class="modal-inputs">
+            <h2 class="modal-title">Choose your preferences!</h2>
+            <div class="input-group">
+              <label for="choice-amount">How many choices?</label>
+              <input
+                class="input"
+                type="number"
+                name="choice-amount"
+                id="choice-amount"
+                min="4"
+                max="100"
+                placeholder="Between 4 and 100"
+              />
+            </div>
+            <div class="input-group">
+              <label for="attempt-amount"
+                >How many attempts? (if left empty: 40%)</label
+              >
+              <input
+                class="input"
+                type="number"
+                name="attempt-amount"
+                id="attempt-amount"
+                min="1"
+                max="50"
+                placeholder="Between 1 and 50"
+              />
+            </div>
+            <div class="input-group">
+              <label for="prevent-reset"
+                >Do you want these choices to remain if you reset? Doesn't work
+                for attempts!
+              </label>
+              <!-- make checkbox class consistent with id!!! -->
+              <input
+                class="input checkbox"
+                type="checkbox"
+                name="prevent-reset"
+                id="prevent-reset"
+                value="true"
+              />
+            </div>
+          </section>
+          <section class="modal-btns">
+            <button class="btn modal-btn btn-confirm">Confirm</button>
+            <button class="btn modal-btn btn-cancel">Cancel</button>
+          </section>
+        </form>
+        <div class="overlay hidden"></div>
       </main>
     </div>
-
-    <form class="modal hidden">
-      <section class="modal-inputs">
-        <h2 class="modal-title">Choose your preferences!</h2>
-        <div class="input-group">
-          <label for="choice-amount">How many choices?</label>
-          <input
-            class="input"
-            type="number"
-            name="choice-amount"
-            id="choice-amount"
-            min="4"
-            max="100"
-            placeholder="Between 4 and 100"
-          />
-        </div>
-        <div class="input-group">
-          <label for="attempt-amount"
-            >How many attempts? (if left empty: 40%)</label
-          >
-          <input
-            class="input"
-            type="number"
-            name="attempt-amount"
-            id="attempt-amount"
-            min="1"
-            max="50"
-            placeholder="Between 1 and 50"
-          />
-        </div>
-        <div class="input-group">
-          <label for="prevent-reset"
-            >Do you want these choices to remain if you reset? Doesn't work for
-            attempts!
-          </label>
-          <input
-            class="input checkbox"
-            type="checkbox"
-            name="prevent-reset"
-            id="prevent-reset"
-            value="true"
-          />
-        </div>
-      </section>
-      <section class="modal-btns">
-        <button class="btn modal-btn btn-confirm">Confirm</button>
-        <button class="btn modal-btn btn-cancel">Cancel</button>
-      </section>
-    </form>
-
-    <div class="overlay hidden"></div>
-    <footer class="footer"></footer>
-
     <script src="game.js"></script>
   </body>
 </html>
+
+<!-- future changes: change inpute="number" to range-->
