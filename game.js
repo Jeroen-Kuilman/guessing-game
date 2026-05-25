@@ -22,20 +22,18 @@ const btnConfirm = document.querySelector(".btn-confirm");
 
 const checkBox = document.querySelector(".checkbox");
 
+const maxChoice = 100;
+
 ///////////////////////////////////////
 //objects
 ///////////////////////////////////////
 const state = {
+  rightAnswer: 0,
   clickCounter: 0,
   playing: false,
   lastClickedBtn: 0,
   lastGameStatus: 0,
   winCounter: 0,
-  maxChoice: 100,
-  randomNumber: function (num = 12) {
-    Math.ceil(Math.random() * num);
-    return this.num;
-  },
 };
 
 const settings = {
@@ -44,17 +42,13 @@ const settings = {
   keepPreferences: false,
 };
 
-// let num, clickCounter, playing, lastClickedBtn, lastGameStatus;
-let checkBoxValue = false;
-// let winCounter = 0;
-// const maxChoice = 1000;
-
-// this is a dummy number to fool people using the console
-const randNum = Math.ceil(Math.random() * 12);
-
 ///////////////////////////////////////
 //functions
 //////////////////////////////////////
+const randomNumber = (max) => Math.ceil(Math.random() * max);
+
+// this is a dummy number to fool people using the console
+const randNum = (max) => Math.ceil(Math.random() * max);
 
 // create new playbuttons
 const createPlayButton = (amount) => {
@@ -83,14 +77,10 @@ const destroyPlayButton = (amount) => {
 };
 
 // reset game
-const init = function (
-  choiceAmount = 12,
-  attemptAmount,
-  keepPreferences = checkBoxValue,
-) {
-  const activeChoiceAmount = keepPreferences
+const init = function () {
+  const activeChoiceAmount = settings.keepPreferences
     ? btnsPlay.length
-    : state.choiceAmount;
+    : settings.choiceAmount;
   const INITIAL_DELAY = 800;
   const INTERVAL_SPEED = 30;
   const totalTime = INITIAL_DELAY + activeChoiceAmount * INTERVAL_SPEED;
@@ -98,10 +88,12 @@ const init = function (
   // start playing only once the playbuttons have been reset, not before
   state.playing = false;
 
-  state.clickCounter = attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
+  state.clickCounter =
+    settings.attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
   //new random number
   setTimeout(() => (state.playing = true), totalTime);
-  state.num = state.randomNumber(activeChoiceAmount);
+  state.rightAnswer = randomNumber(activeChoiceAmount);
+  randNum(activeChoiceAmount);
 
   //reset playbuttons and attempts and lastClickedBtn
   if (btnsPlay.length >= activeChoiceAmount) {
@@ -149,14 +141,14 @@ const gameLogic = function (e) {
   const btn = e.target;
 
   if (state.playing) {
-    if (+btn.textContent === state.num) {
+    if (+btn.textContent === state.rightAnswer) {
       state.lastGameStatus = 1;
       state.winCounter++;
       winTracker.textContent = `Your current winning streak: ${state.winCounter}`;
       tracker.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
       btnsPlay.forEach((btn) => {
         btn.classList.add("right-button");
-        btn.innerHTML = `<span>${+btn.dataset.value === state.num ? state.num : ""}</span>`;
+        btn.innerHTML = `<span>${+btn.dataset.value === state.rightAnswer ? state.rightAnswer : ""}</span>`;
       });
       state.playing = false;
     } else if (!btn.classList.contains("wrong-button")) {
@@ -174,7 +166,7 @@ const gameLogic = function (e) {
       winTracker.textContent = "Your current winning streak: 0";
       btnsPlay.forEach((btn) => {
         btn.classList.add("wrong-button");
-        btn.innerHTML = `<span>${+btn.dataset.value === state.num ? state.num : ""}</span>`;
+        btn.innerHTML = `<span>${+btn.dataset.value === state.rightAnswer ? state.rightAnswer : ""}</span>`;
       });
       tracker.textContent = "You lose, that choice wasn't wise... ☠️";
       state.playing = false;
@@ -193,45 +185,13 @@ const closeModal = function () {
 };
 
 //options logic
-const optionsLogic = function () {
-  // const newChoiceAmount = Math.min(
-  //   maxChoice,
-  //   Math.max(4, +inputChoiceAmount.value),
-  // );
-
-  const newChoiceAmount = Math.min(
-    state.maxChoice,
-    Math.max(4, +inputChoiceAmount.value),
-  );
-  const newAttemptAmount = Math.min(50, Math.max(1, +inputAttemptAmount.value));
-  const curAmount = btnsPlay.length;
-
-  // choose the amount of choices
-  if (newChoiceAmount >= curAmount) {
-    createPlayButton(newChoiceAmount - curAmount);
-  } else {
-    destroyPlayButton(newChoiceAmount);
-  }
-
-  // choose the amount of attempts (if left empty, it wil default to 40% of the amount of choices)
-  if (inputAttemptAmount.value) {
-    attemptsCounter.textContent = `Attempts left: ${newAttemptAmount}`;
-    state.clickCounter = newAttemptAmount;
-  } else {
-    attemptsCounter.textContent = `Attempts left: ${Math.trunc(newChoiceAmount * 0.4)}`;
-    state.clickCounter = Math.trunc(newChoiceAmount * 0.4);
-  }
-
-  state.num = state.randomNumber(newChoiceAmount);
-  titleBetween.textContent = `Choose a number between 1 and ${newChoiceAmount}`;
-};
 
 // some fun hints
 const getHint = function () {
   if (state.playing)
     if (state.lastClickedBtn !== 0) {
       tracker.textContent =
-        state.lastClickedBtn > state.num
+        state.lastClickedBtn > state.rightAnswer
           ? "Maybe lower? 🤔"
           : "Maybe higher? 🫤";
     } else {
@@ -246,7 +206,7 @@ const getHint = function () {
     });
     setTimeout(() => {
       btnsPlay.forEach((btn) => {
-        btn.innerHTML = `<span>${state.num}</span>`;
+        btn.innerHTML = `<span>${state.rightAnswer}</span>`;
         btn.classList.add("btn-visible");
       });
     }, 1000);
@@ -286,15 +246,16 @@ btnCancel.addEventListener("click", function (e) {
 // click to confirm options
 btnConfirm.addEventListener("click", function (e) {
   e.preventDefault();
-  const newChoiceAmount = Math.min(
-    state.maxChoice,
+  settings.choiceAmount = Math.min(
+    maxChoice,
     Math.max(4, +inputChoiceAmount.value),
   );
-  const newAttemptAmount = inputAttemptAmount.value
+  settings.attemptAmount = inputAttemptAmount.value
     ? Math.min(50, Math.max(1, +inputAttemptAmount.value))
-    : undefined;
-  optionsLogic();
-  init(newChoiceAmount, newAttemptAmount, checkBoxValue);
+    : null;
+
+  settings.keepPreferences;
+  init();
   closeModal();
 });
 
@@ -303,7 +264,7 @@ bntHint.addEventListener("click", getHint);
 
 // checkbox
 checkBox.addEventListener("change", function () {
-  checkBoxValue = this.checked;
+  settings.keepPreferences = this.checked;
 });
 
 // future feature: stats per person
