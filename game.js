@@ -22,10 +22,24 @@ const btnConfirm = document.querySelector(".btn-confirm");
 
 const checkBox = document.querySelector(".checkbox");
 
-let num, clickCounter, playing, lastClickedBtn, lastGameStatus;
-let checkBoxValue = false;
-let winCounter = 0;
-const maxChoice = 1000;
+///////////////////////////////////////
+// State object
+///////////////////////////////////////
+const state = {
+  num: 0,
+  clickCounter: 0,
+  playing: false,
+  lastClickedBtn: 0,
+  lastGameStatus: 0,
+  checkBoxValue: false,
+  winCounter: 0,
+  maxChoice: 100,
+};
+
+// let num, clickCounter, playing, lastClickedBtn, lastGameStatus;
+// let checkBoxValue = false;
+// let winCounter = 0;
+// const maxChoice = 1000;
 
 // this is a dummy number to fool people using the console
 const randNum = Math.ceil(Math.random() * 12);
