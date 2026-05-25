@@ -8,6 +8,7 @@ const attemptsCounter = document.querySelector(".attempt-counter");
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnSection = document.querySelector(".btn-section");
+const highStreak = document.querySelector(".highest-winstreak");
 
 // input variables
 const inputChoiceAmount = document.querySelector("#choice-amount");
@@ -49,6 +50,12 @@ const settings = {
   choiceAmount: DEFAULT_CHOICE_AMOUNT,
   attemptAmount: null,
   keepPreferences: false,
+};
+
+// WIP
+const playerStatistics = {
+  highestWinStreak: 0,
+  highestLossStreak: 0,
 };
 
 ///////////////////////////////////////
@@ -101,7 +108,7 @@ const resetState = function (activeChoiceAmount) {
   // reset the click counter
   state.clickCounter = attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
 
-  // new random number and dummy number
+  // new right answer and dummy number
   state.rightAnswer = randomNumber(activeChoiceAmount);
   randNum = randomNumber(activeChoiceAmount);
 
@@ -204,6 +211,13 @@ const gameLogic = function (e) {
       feedbackText.textContent = "You lose, that choice wasn't wise... ☠️";
       state.playing = false;
     }
+
+    if (state.winCounter > playerStatistics.highestWinStreak) {
+      playerStatistics.highestWinStreak = state.winCounter;
+      highStreak.textContent = `Your highest winning streak: ${playerStatistics.highestWinStreak}`;
+    } else {
+      playerStatistics.highestWinStreak = playerStatistics.highestWinStreak;
+    }
   }
 };
 
@@ -268,6 +282,7 @@ btnReset.addEventListener("click", function (e) {
     : DEFAULT_CHOICE_AMOUNT;
 
   init(preferenceChoiceAmount);
+  console.log(playerStatistics.highestWinStreak);
 });
 
 // click to guess
