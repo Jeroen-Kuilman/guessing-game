@@ -23,21 +23,29 @@ const btnConfirm = document.querySelector(".btn-confirm");
 const checkBox = document.querySelector(".checkbox");
 
 ///////////////////////////////////////
-// State object
+//objects
 ///////////////////////////////////////
 const state = {
-  num: 0,
   clickCounter: 0,
   playing: false,
   lastClickedBtn: 0,
   lastGameStatus: 0,
-  checkBoxValue: false,
   winCounter: 0,
   maxChoice: 100,
+  randomNumber: function (num = 12) {
+    Math.ceil(Math.random() * num);
+    return this.num;
+  },
+};
+
+const settings = {
+  choiceAmount: 12,
+  attemptAmount: null,
+  keepPreferences: false,
 };
 
 // let num, clickCounter, playing, lastClickedBtn, lastGameStatus;
-// let checkBoxValue = false;
+let checkBoxValue = false;
 // let winCounter = 0;
 // const maxChoice = 1000;
 
@@ -47,9 +55,6 @@ const randNum = Math.ceil(Math.random() * 12);
 ///////////////////////////////////////
 //functions
 //////////////////////////////////////
-
-// generate the random number
-const randomNumber = (num = 12) => Math.ceil(Math.random() * num);
 
 // create new playbuttons
 const createPlayButton = (amount) => {
@@ -83,18 +88,20 @@ const init = function (
   attemptAmount,
   keepPreferences = checkBoxValue,
 ) {
-  const activeChoiceAmount = keepPreferences ? btnsPlay.length : choiceAmount;
+  const activeChoiceAmount = keepPreferences
+    ? btnsPlay.length
+    : state.choiceAmount;
   const INITIAL_DELAY = 800;
   const INTERVAL_SPEED = 30;
   const totalTime = INITIAL_DELAY + activeChoiceAmount * INTERVAL_SPEED;
 
   // start playing only once the playbuttons have been reset, not before
-  playing = false;
+  state.playing = false;
 
-  clickCounter = attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
+  state.clickCounter = attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
   //new random number
-  setTimeout(() => (playing = true), totalTime);
-  num = randomNumber(activeChoiceAmount);
+  setTimeout(() => (state.playing = true), totalTime);
+  state.num = state.randomNumber(activeChoiceAmount);
 
   //reset playbuttons and attempts and lastClickedBtn
   if (btnsPlay.length >= activeChoiceAmount) {
@@ -103,14 +110,14 @@ const init = function (
     createPlayButton(activeChoiceAmount - btnsPlay.length);
   }
 
-  lastClickedBtn = 0;
+  state.lastClickedBtn = 0;
 
   //reset text
   tracker.textContent =
-    lastGameStatus === 1
+    state.lastGameStatus === 1
       ? "Let's keep that winning streak going! 🔥🔥🔥"
       : "Maybe this time, you have better luck!🍀";
-  attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
+  attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
 
   titleBetween.textContent = `Choose a number between 1 and ${activeChoiceAmount}`;
   inputChoiceAmount.value = "";
@@ -141,36 +148,36 @@ const init = function (
 const gameLogic = function (e) {
   const btn = e.target;
 
-  if (playing) {
-    if (+btn.textContent === num) {
-      lastGameStatus = 1;
-      winCounter++;
-      winTracker.textContent = `Your current winning streak: ${winCounter}`;
-      tracker.textContent = `${clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
+  if (state.playing) {
+    if (+btn.textContent === state.num) {
+      state.lastGameStatus = 1;
+      state.winCounter++;
+      winTracker.textContent = `Your current winning streak: ${state.winCounter}`;
+      tracker.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
       btnsPlay.forEach((btn) => {
         btn.classList.add("right-button");
-        btn.innerHTML = `<span>${+btn.dataset.value === num ? num : ""}</span>`;
+        btn.innerHTML = `<span>${+btn.dataset.value === state.num ? state.num : ""}</span>`;
       });
-      playing = false;
+      state.playing = false;
     } else if (!btn.classList.contains("wrong-button")) {
-      lastClickedBtn = btn.dataset.value;
-      clickCounter--;
-      tracker.textContent = `${clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
-      attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
+      state.lastClickedBtn = btn.dataset.value;
+      state.clickCounter--;
+      tracker.textContent = `${state.clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
+      attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
       btn.classList.add("wrong-button");
       btn.textContent = "";
     }
 
-    if (clickCounter === 0) {
-      lastGameStatus = -1;
-      winCounter = 0;
+    if (state.clickCounter === 0) {
+      state.lastGameStatus = -1;
+      state.winCounter = 0;
       winTracker.textContent = "Your current winning streak: 0";
       btnsPlay.forEach((btn) => {
         btn.classList.add("wrong-button");
-        btn.innerHTML = `<span>${+btn.dataset.value === num ? num : ""}</span>`;
+        btn.innerHTML = `<span>${+btn.dataset.value === state.num ? state.num : ""}</span>`;
       });
       tracker.textContent = "You lose, that choice wasn't wise... ☠️";
-      playing = false;
+      state.playing = false;
     }
   }
 };
@@ -193,7 +200,7 @@ const optionsLogic = function () {
   // );
 
   const newChoiceAmount = Math.min(
-    maxChoice,
+    state.maxChoice,
     Math.max(4, +inputChoiceAmount.value),
   );
   const newAttemptAmount = Math.min(50, Math.max(1, +inputAttemptAmount.value));
@@ -209,27 +216,29 @@ const optionsLogic = function () {
   // choose the amount of attempts (if left empty, it wil default to 40% of the amount of choices)
   if (inputAttemptAmount.value) {
     attemptsCounter.textContent = `Attempts left: ${newAttemptAmount}`;
-    clickCounter = newAttemptAmount;
+    state.clickCounter = newAttemptAmount;
   } else {
     attemptsCounter.textContent = `Attempts left: ${Math.trunc(newChoiceAmount * 0.4)}`;
-    clickCounter = Math.trunc(newChoiceAmount * 0.4);
+    state.clickCounter = Math.trunc(newChoiceAmount * 0.4);
   }
 
-  num = randomNumber(newChoiceAmount);
+  state.num = state.randomNumber(newChoiceAmount);
   titleBetween.textContent = `Choose a number between 1 and ${newChoiceAmount}`;
 };
 
 // some fun hints
 const getHint = function () {
-  if (playing)
-    if (lastClickedBtn !== 0) {
+  if (state.playing)
+    if (state.lastClickedBtn !== 0) {
       tracker.textContent =
-        lastClickedBtn > num ? "Maybe lower? 🤔" : "Maybe higher? 🫤";
+        state.lastClickedBtn > state.num
+          ? "Maybe lower? 🤔"
+          : "Maybe higher? 🫤";
     } else {
       tracker.textContent = `Maybe try first before you start asking for help? 🤨`;
     }
 
-  if (!playing) {
+  if (!state.playing) {
     const curAmount = btnsPlay.length;
     tracker.innerHTML = `You already know the answer, it's: <span style='font-size:2rem;'>&#8680;</span>`;
     btnsPlay.forEach((btn) => {
@@ -237,7 +246,7 @@ const getHint = function () {
     });
     setTimeout(() => {
       btnsPlay.forEach((btn) => {
-        btn.innerHTML = `<span>${num}</span>`;
+        btn.innerHTML = `<span>${state.num}</span>`;
         btn.classList.add("btn-visible");
       });
     }, 1000);
@@ -278,7 +287,7 @@ btnCancel.addEventListener("click", function (e) {
 btnConfirm.addEventListener("click", function (e) {
   e.preventDefault();
   const newChoiceAmount = Math.min(
-    maxChoice,
+    state.maxChoice,
     Math.max(4, +inputChoiceAmount.value),
   );
   const newAttemptAmount = inputAttemptAmount.value
