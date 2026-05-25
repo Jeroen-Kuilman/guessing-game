@@ -25,7 +25,10 @@ const checkBox = document.querySelector(".checkbox");
 let num, clickCounter, playing, lastClickedBtn, lastGameStatus;
 let checkBoxValue = false;
 let winCounter = 0;
-const maxChoice = 100;
+const maxChoice = 1000;
+
+// this is a dummy number to fool people using the console
+const randNum = Math.ceil(Math.random() * 12);
 
 ///////////////////////////////////////
 //functions
@@ -66,21 +69,24 @@ const init = function (
   attemptAmount,
   keepPreferences = checkBoxValue,
 ) {
+  const activeChoiceAmount = keepPreferences ? btnsPlay.length : choiceAmount;
+  const INITIAL_DELAY = 800;
+  const INTERVAL_SPEED = 30;
+  const totalTime = INITIAL_DELAY + activeChoiceAmount * INTERVAL_SPEED;
+
   // start playing only once the playbuttons have been reset, not before
   playing = false;
-  setTimeout(() => (playing = true), 1200);
 
-  const activeChoiceAmount = keepPreferences ? btnsPlay.length : choiceAmount;
   clickCounter = attemptAmount || Math.trunc(activeChoiceAmount * 0.4);
-  console.log(activeChoiceAmount);
   //new random number
+  setTimeout(() => (playing = true), totalTime);
   num = randomNumber(activeChoiceAmount);
 
   //reset playbuttons and attempts and lastClickedBtn
-  if (btnsPlay.length > activeChoiceAmount) {
+  if (btnsPlay.length >= activeChoiceAmount) {
     destroyPlayButton(activeChoiceAmount);
-  } else if (btnsPlay.length < activeChoiceAmount) {
-    createPlayButton(activeChoiceAmount - btnsPlay.length); // ✅ adds missing buttons
+  } else {
+    createPlayButton(activeChoiceAmount - btnsPlay.length);
   }
 
   lastClickedBtn = 0;
@@ -88,8 +94,8 @@ const init = function (
   //reset text
   tracker.textContent =
     lastGameStatus === 1
-      ? "Let's keep that winning streak going!"
-      : "Maybe this time, you have better luck!";
+      ? "Let's keep that winning streak going! 🔥🔥🔥"
+      : "Maybe this time, you have better luck!🍀";
   attemptsCounter.textContent = `Attempts left: ${clickCounter}`;
 
   titleBetween.textContent = `Choose a number between 1 and ${activeChoiceAmount}`;
@@ -126,7 +132,7 @@ const gameLogic = function (e) {
       lastGameStatus = 1;
       winCounter++;
       winTracker.textContent = `Your current winning streak: ${winCounter}`;
-      tracker.textContent = `${clickCounter === 1 ? "You win, that was indeed a wise choice!" : "You win, with attempts to spare!"}`;
+      tracker.textContent = `${clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
       btnsPlay.forEach((btn) => {
         btn.classList.add("right-button");
         btn.innerHTML = `<span>${+btn.dataset.value === num ? num : ""}</span>`;
@@ -149,7 +155,7 @@ const gameLogic = function (e) {
         btn.classList.add("wrong-button");
         btn.innerHTML = `<span>${+btn.dataset.value === num ? num : ""}</span>`;
       });
-      tracker.textContent = "You lose, that choice wasn't wise...";
+      tracker.textContent = "You lose, that choice wasn't wise... ☠️";
       playing = false;
     }
   }
@@ -204,14 +210,14 @@ const getHint = function () {
   if (playing)
     if (lastClickedBtn !== 0) {
       tracker.textContent =
-        lastClickedBtn > num ? "Maybe lower?" : "Maybe higher?";
+        lastClickedBtn > num ? "Maybe lower? 🤔" : "Maybe higher? 🫤";
     } else {
-      tracker.textContent = `Maybe try first before you start asking for help?`;
+      tracker.textContent = `Maybe try first before you start asking for help? 🤨`;
     }
 
   if (!playing) {
     const curAmount = btnsPlay.length;
-    tracker.textContent = `You already know the answer, it's:`;
+    tracker.innerHTML = `You already know the answer, it's: <span style='font-size:2rem;'>&#8680;</span>`;
     btnsPlay.forEach((btn) => {
       btn.classList.remove("btn-visible");
     });
@@ -230,9 +236,9 @@ const getHint = function () {
 //logic for clicking the play buttons
 init();
 console.log(
-  "%cTrying to cheat, huh? Well I won't stop you, but you never guess the variable name of the random %cnum%c, which you need to cheat your way to the right answer! %c*cough cough*",
+  "%cTrying to cheat, huh? Well I won't stop you, but you never guess the variable name of the %crandNum%c, which you need to cheat your way to the right answer! %c*cough cough*",
   "font-size: 30px; background-color:#f5f5e9; color: black;",
-  "font-size: 30px; background-color:#f5f5e9; color: black; text-decoration: underline dashed 4px red;font-weight: bold;",
+  "font-size: 30px; background-color:#f5f5e9; color: black; text-decoration: underline dashed 4px red; font-weight: bold;",
   "font-size: 30px; background-color:#f5f5e9; color: black;",
   "font-size: 30px; background-color:#f5f5e9; color: black; font-weight: bold;",
 );
@@ -275,15 +281,10 @@ bntHint.addEventListener("click", getHint);
 // checkbox
 checkBox.addEventListener("change", function () {
   checkBoxValue = this.checked;
-  console.log(checkBoxValue);
 });
 
-// change checkbox true
-//
+// future feature: stats per person
+// future feature: If the game gets reset when playing, winning streak = 0
+// fake random number should also reset
 
-// missing feature: the adding / removing of buttons isn't smooth FIXED FOR NOW
-
-// bug: if input choices remain empty while setting the attempts (or leaving everything empty), will result in the game defaulting to the minimum amount of choices
-// bug: created buttons flash shortly when clicked
-// bug: setting a custom attempts amount doesn't work anymore
-// bug: if reset is pressed while hints isn't done with its timer function, after a game ended, the resetted buttons for the next game will all show the answer.
+// clean up: init, and options logic, add state object, improve names
