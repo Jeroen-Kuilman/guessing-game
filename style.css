@@ -13,6 +13,11 @@
   );
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   opacity: 0.9;
   background-image: radial-gradient(#034e4f 1.3px, #081d1e 1.3px);
@@ -26,7 +31,21 @@ body {
   color: var(--text-light);
   line-height: 2rem;
   font-size: 1rem;
-  margin: 0%;
+}
+
+h1,
+h2,
+h3 {
+  margin: 20px;
+}
+p {
+  margin-bottom: 10px;
+}
+
+ul,
+ol,
+li {
+  margin-left: 10px;
 }
 
 /* Basic styling for all buttons. Put it high, so it can easily be overidden*/
@@ -47,7 +66,7 @@ body {
 
 .header {
   align-content: center;
-  min-height: 10vh;
+  /* min-height: 10vh; */
   background: var(--gradient-header);
 }
 
@@ -60,15 +79,14 @@ body {
 .side-bar {
   position: sticky;
   top: 0;
-  width: 30%;
-  height: 100vh;
   overflow-y: auto;
+  width: 35%;
+  height: 100vh;
   background: var(--gradient-header);
-  padding: 20px;
+  padding: 0 20px;
   flex-shrink: 0;
   border-radius: 5px;
   box-shadow: 0px 10px 5px 10px rgba(0, 0, 0, 0.26);
-  min-height: 100%;
 }
 
 .game-status,

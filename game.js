@@ -24,7 +24,7 @@ const btnCancel = document.querySelector(".btn-cancel");
 const btnConfirm = document.querySelector(".btn-confirm");
 
 // default variables
-const MAX_CHOICE = 100;
+const MAX_CHOICE = 1000;
 const DEFAULT_CHOICE_AMOUNT = 12;
 
 ///////////////////////////////////////
@@ -168,8 +168,10 @@ const renderGameBoard = function (activeChoiceAmount) {
 
 // wrap the reset functions and a safeguard for when resetting early
 const init = function (activeChoiceAmount) {
-  if (state.playing) {
+  if (state.playing && state.lastGameStatus !== GAME_STATUS.RESET_EARLY) {
     state.lastGameStatus = GAME_STATUS.RESET_EARLY;
+  } else if (state.playing) {
+    state.lastGameStatus = GAME_STATUS.DEFAULT;
   }
   resetState(activeChoiceAmount);
   renderGameBoard(activeChoiceAmount);
