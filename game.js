@@ -3,6 +3,7 @@
 // elements variables
 const titleBetween = document.querySelector(".title-between");
 const winTracker = document.querySelector(".win-counter");
+const lossTracker = document.querySelector(".loss-counter");
 const feedbackText = document.querySelector(".feedback-text");
 const attemptsCounter = document.querySelector(".attempt-counter");
 const modal = document.querySelector(".modal");
@@ -26,7 +27,7 @@ const btnConfirm = document.querySelector(".btn-confirm");
 
 // default variables
 const MAX_CHOICE = 1000;
-const DEFAULT_CHOICE_AMOUNT = 12;
+const DEFAULT_CHOICE_AMOUNT = 30;
 
 ///////////////////////////////////////
 // objects
@@ -63,6 +64,7 @@ const playerStatistics = {
 ///////////////////////////////////////
 // functions
 //////////////////////////////////////
+
 // creation of the right answer
 const randomNumber = (max) => Math.ceil(Math.random() * max);
 
@@ -153,6 +155,8 @@ const renderGameBoard = function (activeChoiceAmount) {
     btn.removeAttribute("style");
   });
 
+  feedbackText.classList.remove("wrong", "loss", "win");
+
   setTimeout(() => {
     let i = 0;
     const interval = setInterval(() => {
@@ -185,10 +189,13 @@ const gameLogicWin = function () {
 
   state.lastGameStatus = GAME_STATUS.WIN;
   state.winCounter++;
-  ((state.lossCounter = 0),
-    (winTracker.textContent = `Your current winning streak: ${state.winCounter}`));
+  state.lossCounter = 0;
+  winTracker.textContent = `Your current winning streak: ${state.winCounter}`;
+  lossTracker.textContent = "Your current losing streak: 0";
 
   feedbackText.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
+  feedbackText.classList.remove("wrong", "loss", "win");
+  feedbackText.classList.add("win");
 
   btnsPlay.forEach((btn) => {
     btn.classList.add("right-button");
@@ -202,7 +209,15 @@ const gameLogicWrongGuess = function (btn) {
   state.lastGuessedValue = btn.dataset.value;
   state.clickCounter--;
 
-  feedbackText.textContent = `${state.clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
+  if (state.clickCounter === 1) {
+    feedbackText.textContent = "Only one chance left, choose wisely!";
+    feedbackText.classList.remove("wrong", "loss", "win");
+    feedbackText.classList.add("loss");
+  } else {
+    feedbackText.textContent = "Wrong, guess again!";
+    feedbackText.classList.remove("wrong", "loss", "win");
+    feedbackText.classList.add("wrong");
+  }
   attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
 
   btn.classList.add("wrong-button");
@@ -215,6 +230,7 @@ const gameLogicLoss = function () {
   state.lastGameStatus = GAME_STATUS.LOSS;
   state.winCounter = 0;
   state.lossCounter++;
+  lossTracker.textContent = `Your current losing streak: ${state.lossCounter}`;
   winTracker.textContent = "Your current winning streak: 0";
 
   btnsPlay.forEach((btn) => {
@@ -222,7 +238,10 @@ const gameLogicLoss = function () {
     btn.innerHTML = `<span>${+btn.dataset.value === rightAnswer ? rightAnswer : ""}</span>`;
   });
 
+  feedbackText.classList.remove("wrong", "loss", "win");
+  feedbackText.classList.add("loss");
   feedbackText.textContent = "You lose, that choice wasn't wise... ☠️";
+
   state.playing = false;
 };
 
@@ -300,12 +319,19 @@ const showHint = function () {
   }
 };
 
+// small function to change alignment of playbuttons (NEEDS TO BE REFACTORED INTO OTHER FUNCTIONS)
+const updateAlignment = () => {
+  btnSection.style.alignContent =
+    btnSection.scrollHeight > btnSection.clientHeight ? "flex-start" : "center";
+};
+
 /////////////////////////////////////
 // eventhandlers
 /////////////////////////////////////
 
 // making sure every value is properly set when the game is first loaded
 init(DEFAULT_CHOICE_AMOUNT);
+updateAlignment();
 
 // console text to fool people into using the dummy number
 console.log(
@@ -325,6 +351,7 @@ btnReset.addEventListener("click", function (e) {
     : DEFAULT_CHOICE_AMOUNT;
 
   init(preferenceChoiceAmount);
+  updateAlignment();
 });
 
 // click to guess
@@ -355,6 +382,7 @@ btnConfirm.addEventListener("click", function (e) {
 
   init(settings.choiceAmount);
   closeModal();
+  updateAlignment();
 });
 
 // checkbox to save settings
@@ -366,7 +394,7 @@ checkBox.addEventListener("change", function () {
 btnHint.addEventListener("click", showHint);
 
 //////////////////////////////////////////////
-// seperate all in one slider function
+// A seperate all inclusive slider function (needs to be refactored)
 /////////////////////////////////////////////
 const slider = function () {
   const slides = document.querySelectorAll(".slide");
@@ -454,12 +482,14 @@ const slider = function () {
 };
 slider();
 
+window.addEventListener("resize", updateAlignment);
+
 //////////////////////////////////////
 // future features, current bugs and other issues
 //////////////////////////////////////
 
 // bug: if hint is clicked when the game is being reset, after a won or loss situation, the next game will will generate the buttons with all of them being the answer.
 
-// future feature: stats per person
+// future feature: stats per person (create account)
 // future feature: dynamically limit the amount of hinst per choices or attempts.
 // future feature: add an option to keep attempts preferences too, without breaking the default logic

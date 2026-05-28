@@ -43,6 +43,7 @@ h4 {
 }
 p {
   margin-bottom: 0.6rem;
+  font-size: 1.1rem;
 }
 
 ul,
@@ -94,14 +95,14 @@ li {
 
   display: flex;
   flex-direction: column;
-
-  width: fit-content;
+  width: 20rem;
+  min-width: 0;
 
   background: var(--gradient-sidebar);
   padding: 0 1.25rem;
   flex-shrink: 0;
   box-shadow: 0 0.625rem 0.3rem 0.625rem rgba(0, 0, 0, 0.26);
-  z-index: 5;
+  z-index: 1;
 }
 
 .side-bar h2,
@@ -152,7 +153,7 @@ li {
 
 .slider {
   width: 100%;
-  min-height: 20rem;
+  min-height: 18rem;
   margin: 0 auto 1.9rem;
   position: relative;
   background: var(--bg-lighter);
@@ -167,7 +168,6 @@ li {
   left: 0;
   width: 100%;
   height: 100%;
-  align-content: space-around;
   padding: 0.8rem;
 
   transition: transform 1s;
@@ -242,6 +242,18 @@ li {
   padding: 5px;
 }
 
+.win {
+  color: rgb(4, 188, 4);
+}
+
+.loss {
+  color: rgb(248, 53, 53);
+}
+
+.wrong {
+  color: rgb(237, 172, 66);
+}
+
 .feedback-section,
 .options-section {
   display: flex;
@@ -250,7 +262,7 @@ li {
   justify-content: center;
   align-content: center;
   gap: 0.625rem;
-  padding: 5px;
+  padding: 1rem;
   border-radius: 10px;
   margin-bottom: 1.875rem;
   min-height: 5rem;
@@ -258,6 +270,8 @@ li {
 .feedback-text {
   font-size: 1.1rem;
   font-weight: bold;
+  width: 100%;
+  overflow-wrap: break-word;
 }
 
 .btn-settings {
@@ -275,9 +289,10 @@ li {
 .btn-section {
   display: flex;
   flex: 1;
+  flex-direction: row;
   min-height: 0;
   flex-wrap: wrap;
-  align-content: start;
+  align-content: flex-start;
   justify-content: center;
   gap: 0.625rem;
   margin-bottom: 1.25rem;
