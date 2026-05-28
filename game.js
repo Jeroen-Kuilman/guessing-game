@@ -9,6 +9,7 @@ const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnSection = document.querySelector(".btn-section");
 const highStreak = document.querySelector(".highest-winstreak");
+const loseStreak = document.querySelector(".highest-losestreak");
 
 // input variables
 const inputChoiceAmount = document.querySelector("#choice-amount");
@@ -44,6 +45,7 @@ const state = {
   lastGuessedValue: 0,
   lastGameStatus: GAME_STATUS.DEFAULT,
   winCounter: 0,
+  lossCounter: 0,
 };
 
 const settings = {
@@ -186,7 +188,8 @@ const gameLogic = function (e) {
     if (+btn.textContent === rightAnswer) {
       state.lastGameStatus = GAME_STATUS.WIN;
       state.winCounter++;
-      winTracker.textContent = `Your current winning streak: ${state.winCounter}`;
+      ((state.lossCounter = 0),
+        (winTracker.textContent = `Your current winning streak: ${state.winCounter}`));
       feedbackText.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
       btnsPlay.forEach((btn) => {
         btn.classList.add("right-button");
@@ -205,6 +208,7 @@ const gameLogic = function (e) {
     if (state.clickCounter === 0) {
       state.lastGameStatus = GAME_STATUS.LOSS;
       state.winCounter = 0;
+      state.lossCounter++;
       winTracker.textContent = "Your current winning streak: 0";
       btnsPlay.forEach((btn) => {
         btn.classList.add("wrong-button");
@@ -219,6 +223,13 @@ const gameLogic = function (e) {
       highStreak.textContent = `Your highest winning streak: ${playerStatistics.highestWinStreak}`;
     } else {
       playerStatistics.highestWinStreak = playerStatistics.highestWinStreak;
+    }
+
+    if (state.lossCounter > playerStatistics.highestLossStreak) {
+      playerStatistics.highestLossStreak = state.lossCounter;
+      loseStreak.textContent = `Your highest losing streak: ${playerStatistics.highestLossStreak}`;
+    } else {
+      playerStatistics.highestLossStreak = playerStatistics.highestLossStreak;
     }
   }
 };
@@ -284,7 +295,6 @@ btnReset.addEventListener("click", function (e) {
     : DEFAULT_CHOICE_AMOUNT;
 
   init(preferenceChoiceAmount);
-  console.log(playerStatistics.highestWinStreak);
 });
 
 // click to guess
