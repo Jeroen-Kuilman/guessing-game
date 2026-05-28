@@ -397,6 +397,9 @@ checkBox.addEventListener("change", function () {
 
 // click to receive a hint
 btnHint.addEventListener("click", showHint);
+document.addEventListener("keydown", function (e) {
+  if (e.key === "z") showHint();
+});
 
 //////////////////////////////////////////////
 // A seperate all inclusive slider function (needs to be refactored)
@@ -498,3 +501,4 @@ window.addEventListener("resize", updateAlignment);
 // future feature: stats per person (create account)
 // future feature: dynamically limit the amount of hinst per choices or attempts.
 // future feature: add an option to keep attempts preferences too, without breaking the default logic
+zd;
