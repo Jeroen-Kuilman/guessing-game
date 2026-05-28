@@ -11,6 +11,7 @@ const overlay = document.querySelector(".overlay");
 const btnSection = document.querySelector(".btn-section");
 const highStreak = document.querySelector(".highest-winstreak");
 const loseStreak = document.querySelector(".highest-losestreak");
+const extraInfo = document.querySelector(".extra-info-title");
 
 // input variables
 const inputChoiceAmount = document.querySelector("#choice-amount");
@@ -28,6 +29,8 @@ const btnConfirm = document.querySelector(".btn-confirm");
 // default variables
 const MAX_CHOICE = 1000;
 const DEFAULT_CHOICE_AMOUNT = 30;
+const INITIAL_DELAY = 800;
+const INTERVAL_SPEED = 10;
 
 ///////////////////////////////////////
 // objects
@@ -101,8 +104,6 @@ const removePlayButton = (amount) => {
 const resetState = function (activeChoiceAmount) {
   const { attemptAmount } = settings;
 
-  const INITIAL_DELAY = 800;
-  const INTERVAL_SPEED = 30;
   const totalTime = INITIAL_DELAY + activeChoiceAmount * INTERVAL_SPEED;
 
   // start playing only once the playbuttons have been reset, not before
@@ -131,6 +132,7 @@ const renderGameBoard = function (activeChoiceAmount) {
   const { lastGameStatus } = state;
 
   // reset text
+  extraInfo.textContent = "The choice is yours!";
   if (lastGameStatus === GAME_STATUS.WIN) {
     feedbackText.textContent = "Let's keep that winning streak going! 🔥🔥🔥";
   } else if (lastGameStatus === GAME_STATUS.LOSS) {
@@ -168,8 +170,8 @@ const renderGameBoard = function (activeChoiceAmount) {
       btnsPlay[i].dataset.value = i + 1;
       btnsPlay[i].classList.add("btn-visible");
       i++;
-    }, 30);
-  }, 800);
+    }, INTERVAL_SPEED);
+  }, INITIAL_DELAY);
 };
 
 // wrap the reset functions and a safeguard for when resetting early
@@ -192,6 +194,7 @@ const gameLogicWin = function () {
   state.lossCounter = 0;
   winTracker.textContent = `Your current winning streak: ${state.winCounter}`;
   lossTracker.textContent = "Your current losing streak: 0";
+  extraInfo.textContent = "Reset to play again!";
 
   feedbackText.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
   feedbackText.classList.remove("wrong", "loss", "win");
@@ -232,6 +235,7 @@ const gameLogicLoss = function () {
   state.lossCounter++;
   lossTracker.textContent = `Your current losing streak: ${state.lossCounter}`;
   winTracker.textContent = "Your current winning streak: 0";
+  extraInfo.textContent = "Reset to play again!";
 
   btnsPlay.forEach((btn) => {
     btn.classList.add("wrong-button");
@@ -356,7 +360,7 @@ btnReset.addEventListener("click", function (e) {
 });
 
 // click to guess
-btnSection.addEventListener("click", function (e) {
+btnSection.addEventListener("mouseover", function (e) {
   if (e.target.classList.contains("btn-play")) gameLogic(e);
 });
 
