@@ -5,15 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="style.css" rel="stylesheet" />
     <title>The guessing game!</title>
+
+    <script defer src="game.js"></script>
   </head>
   <body>
     <header class="header">
-      <h1 class="title">Guess a number!</h1>
+      <section class="header-section">
+        <h1 class="title">Guess a number!</h1>
+        <h2>The choice is yours!</h2>
+        <button class="btn btn-create-account">create account WIP</button>
+      </section>
     </header>
 
     <div class="content">
       <aside class="side-bar">
-        <h2>The choice is yours!</h2>
         <h3>Welcome unknown player!</h3>
         <h3 class="title-between">Choose a number between 1 and 12</h3>
         <div class="slider">
@@ -50,8 +55,8 @@
           <button class="slider__btn slider__btn--right">&rarr;</button>
           <div class="dots"></div>
         </div>
-        <section class="feedback-section"><p class="feedback-text">Click to start...</p>
-          </ul>
+        <section class="feedback-section">
+          <p class="feedback-text">Click to start...</p>
         </section>
 
         <section class="options-section">
@@ -88,8 +93,8 @@
                 name="choice-amount"
                 id="choice-amount"
                 min="4"
-                max="100"
-                placeholder="Between 4 and 100"
+                max="1000"
+                placeholder="Between 4 and 1000"
               />
             </div>
             <div class="input-group">
@@ -129,7 +134,6 @@
         <div class="overlay hidden"></div>
       </main>
     </div>
-    <script src="game.js"></script>
   </body>
 </html>
 
