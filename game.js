@@ -180,57 +180,87 @@ const init = function (activeChoiceAmount) {
 };
 
 // the gameplay loop
+const gameLogicWin = function () {
+  const { rightAnswer } = state;
+
+  state.lastGameStatus = GAME_STATUS.WIN;
+  state.winCounter++;
+  ((state.lossCounter = 0),
+    (winTracker.textContent = `Your current winning streak: ${state.winCounter}`));
+
+  feedbackText.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
+
+  btnsPlay.forEach((btn) => {
+    btn.classList.add("right-button");
+    btn.innerHTML = `<span>${+btn.dataset.value === rightAnswer ? rightAnswer : ""}</span>`;
+  });
+
+  state.playing = false;
+};
+
+const gameLogicWrongGuess = function (btn) {
+  state.lastGuessedValue = btn.dataset.value;
+  state.clickCounter--;
+
+  feedbackText.textContent = `${state.clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
+  attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
+
+  btn.classList.add("wrong-button");
+  btn.textContent = "";
+};
+
+const gameLogicLoss = function () {
+  const { rightAnswer } = state;
+
+  state.lastGameStatus = GAME_STATUS.LOSS;
+  state.winCounter = 0;
+  state.lossCounter++;
+  winTracker.textContent = "Your current winning streak: 0";
+
+  btnsPlay.forEach((btn) => {
+    btn.classList.add("wrong-button");
+    btn.innerHTML = `<span>${+btn.dataset.value === rightAnswer ? rightAnswer : ""}</span>`;
+  });
+
+  feedbackText.textContent = "You lose, that choice wasn't wise... ☠️";
+  state.playing = false;
+};
+
+const gameLogicHighestWinStreak = function () {
+  if (state.winCounter > playerStatistics.highestWinStreak) {
+    playerStatistics.highestWinStreak = state.winCounter;
+    highStreak.textContent = `Your highest winning streak: ${playerStatistics.highestWinStreak}`;
+  } else {
+    playerStatistics.highestWinStreak = playerStatistics.highestWinStreak;
+  }
+};
+
+const gameLogicHighestLoseStreak = function () {
+  if (state.lossCounter > playerStatistics.highestLossStreak) {
+    playerStatistics.highestLossStreak = state.lossCounter;
+    loseStreak.textContent = `Your highest losing streak: ${playerStatistics.highestLossStreak}`;
+  } else {
+    playerStatistics.highestLossStreak = playerStatistics.highestLossStreak;
+  }
+};
+
 const gameLogic = function (e) {
   const btn = e.target;
   const { rightAnswer } = state;
 
   if (state.playing) {
     if (+btn.textContent === rightAnswer) {
-      state.lastGameStatus = GAME_STATUS.WIN;
-      state.winCounter++;
-      ((state.lossCounter = 0),
-        (winTracker.textContent = `Your current winning streak: ${state.winCounter}`));
-      feedbackText.textContent = `${state.clickCounter === 1 ? "You win, that was indeed a wise choice!🎉🎊🎉" : "You win, with attempts to spare!🎉🎊🎉"}`;
-      btnsPlay.forEach((btn) => {
-        btn.classList.add("right-button");
-        btn.innerHTML = `<span>${+btn.dataset.value === rightAnswer ? rightAnswer : ""}</span>`;
-      });
-      state.playing = false;
+      gameLogicWin();
     } else if (!btn.classList.contains("wrong-button")) {
-      state.lastGuessedValue = btn.dataset.value;
-      state.clickCounter--;
-      feedbackText.textContent = `${state.clickCounter === 1 ? "Only one chance left, choose wisely!" : "Wrong, guess again!"}`;
-      attemptsCounter.textContent = `Attempts left: ${state.clickCounter}`;
-      btn.classList.add("wrong-button");
-      btn.textContent = "";
+      gameLogicWrongGuess(btn);
     }
 
     if (state.clickCounter === 0) {
-      state.lastGameStatus = GAME_STATUS.LOSS;
-      state.winCounter = 0;
-      state.lossCounter++;
-      winTracker.textContent = "Your current winning streak: 0";
-      btnsPlay.forEach((btn) => {
-        btn.classList.add("wrong-button");
-        btn.innerHTML = `<span>${+btn.dataset.value === rightAnswer ? rightAnswer : ""}</span>`;
-      });
-      feedbackText.textContent = "You lose, that choice wasn't wise... ☠️";
-      state.playing = false;
+      gameLogicLoss();
     }
 
-    if (state.winCounter > playerStatistics.highestWinStreak) {
-      playerStatistics.highestWinStreak = state.winCounter;
-      highStreak.textContent = `Your highest winning streak: ${playerStatistics.highestWinStreak}`;
-    } else {
-      playerStatistics.highestWinStreak = playerStatistics.highestWinStreak;
-    }
-
-    if (state.lossCounter > playerStatistics.highestLossStreak) {
-      playerStatistics.highestLossStreak = state.lossCounter;
-      loseStreak.textContent = `Your highest losing streak: ${playerStatistics.highestLossStreak}`;
-    } else {
-      playerStatistics.highestLossStreak = playerStatistics.highestLossStreak;
-    }
+    gameLogicHighestWinStreak();
+    gameLogicHighestLoseStreak();
   }
 };
 
