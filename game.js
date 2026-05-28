@@ -52,7 +52,7 @@ const state = {
 const settings = {
   choiceAmount: DEFAULT_CHOICE_AMOUNT,
   attemptAmount: null,
-  keepPreferences: false,
+  keepPreferences: true,
 };
 
 // WIP
@@ -296,6 +296,7 @@ const closeModal = function () {
 // some fun hints
 const showHint = function () {
   const { playing, lastGuessedValue, rightAnswer } = state;
+  feedbackText.classList.remove("wrong", "loss", "win");
   if (playing) {
     if (lastGuessedValue !== 0) {
       feedbackText.textContent =
