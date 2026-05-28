@@ -365,9 +365,100 @@ checkBox.addEventListener("change", function () {
 // click to receive a hint
 btnHint.addEventListener("click", showHint);
 
+//////////////////////////////////////////////
+// seperate all in one slider function
+/////////////////////////////////////////////
+const slider = function () {
+  const slides = document.querySelectorAll(".slide");
+  const btnLeft = document.querySelector(".slider__btn--left");
+  const btnRight = document.querySelector(".slider__btn--right");
+  const dotCointainer = document.querySelector(".dots");
+
+  let curSlide = 0;
+  const maxSlide = slides.length;
+
+  const createDots = function () {
+    slides.forEach(function (_, i) {
+      dotCointainer.insertAdjacentHTML(
+        "beforeend",
+        `<button class="dots__dot" data-slide="${i}"></button>`,
+      );
+    });
+  };
+
+  const activateDot = function (slide) {
+    document
+      .querySelectorAll(".dots__dot")
+      .forEach((dot) => dot.classList.remove("dots__dot--active"));
+
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add("dots__dot--active");
+  };
+
+  const slider = document.querySelector(".slider");
+
+  const goToSlide = function (slide) {
+    slides.forEach(
+      (s, i) => (s.style.transform = `translateX(${150 * (i - slide)}%)`),
+    );
+  };
+
+  // Next slide
+  const nextSlide = function () {
+    if (curSlide === maxSlide - 1) {
+      curSlide = 0;
+    } else {
+      curSlide++;
+    }
+
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
+
+  //previous slide
+  const prevSlide = function () {
+    if (curSlide === 0) {
+      curSlide = maxSlide - 1;
+    } else {
+      curSlide--;
+    }
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
+
+  const sliderInit = function () {
+    createDots();
+    activateDot(0);
+    goToSlide(0);
+  };
+
+  sliderInit();
+
+  // Event handlers
+  btnRight.addEventListener("click", nextSlide);
+  btnLeft.addEventListener("click", prevSlide);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") prevSlide();
+    e.key === "ArrowRight" && nextSlide();
+  });
+
+  dotCointainer.addEventListener("click", function (e) {
+    if (e.target.classList.contains("dots__dot")) {
+      curSlide = Number(e.target.dataset.slide);
+      goToSlide(curSlide);
+      activateDot(curSlide);
+    }
+  });
+};
+slider();
+
 //////////////////////////////////////
 // future features, current bugs and other issues
 //////////////////////////////////////
+
+// bug: if hint is clicked when the game is being reset, after a won or loss situation, the next game will will generate the buttons with all of them being the answer.
 
 // future feature: stats per person
 // future feature: dynamically limit the amount of hinst per choices or attempts.
