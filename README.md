@@ -1,9 +1,19 @@
+
+
 <h1>The Guessing game README</h1>
 
-(ENGLISH VERSION BELOW)
+<h2>Live Demo</h2>
+https://jeroen-kuilman.github.io/guessing-game/
 
-<h2>Nederlandse versie</h2>
-  
+<h2>Tech Stack</h2>
+<ul>
+  <li>HTML5</li>
+  <li>CSS3</li>
+  <li>JavaScript (ES6)</li>
+</ul>
+
+<h2>Nederlandse versie (ENGLISH VERSION BELOW)</h2>
+
 <h3>spelregels en features:</h3>
 
 <ul>
@@ -33,7 +43,7 @@
 
 <p>Ondanks dat dit project grotendeels zijn doel heeft bereikt voor mij, zijn er nog een aantal aspecten die ik wil toevoegen. Bovenaan die lijst staat een feature waarmee een speler een "account" (in de meest simpele zin van het woord) kan aanmaken, zodat de stats per persoon worden bijgehouden. Eventueel, als dit een logische stap is, wil ik kijken of ik dit vanuit het Object-Oriented Programming (OOP) perspectief kan doen. Daarnaast zitten er nou eenmaal een aantal bugs nog in die in de toekomst mogelijk gefixt worden. De voornaamste: wanneer je de hintbutton klikt, vlak nadat de reset is geïnitieerd (voordat het nieuwe spel klaarstaat), dan breekt het volgende spel.</p>
 
-<h3>Hoe open je het spel?</h3>
+<h3>Hoe download je het spel?</h3>
 
 <p>Download de zip (groene knop), houd de 3 files in dezelfde map, en open index.html (in de browser)</p>
 
@@ -69,7 +79,7 @@
 
 <p>Although this project has largely achieved its goal for me, there are still a number of aspects I want to add. At the top of that list is a feature that allows a player to create an "account" (in the simplest sense of the word), so that stats are tracked per person. Potentially, if this is a logical step, I want to see if I can do this from an Object-Oriented Programming (OOP) perspective. Additionally, there are simply a number of bugs that may still be fixed in the future. The main one: when you click the hint button right after the reset has been initiated (before the new game is ready), the next game breaks.</p>
 
-<h3>How do you open the game?</h3>
+<h3>How do you download the game?</h3>
 
 <p>Download the zip (green button), keep the 3 files in the same folder, and open index.html (in the browser)</p>
 
