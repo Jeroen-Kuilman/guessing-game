@@ -2,6 +2,8 @@
 
 (ENGLISH VERSION BELOW)
 
+<h2>Nederlandse versie</h2>
+  
 <h3>spelregels en features:</h3>
 
 <ul>
@@ -19,14 +21,55 @@
 
 </ul>
 
-<h3>Mijn motivatie, leerervaringen, en verantwoording:</h3>
+<h3>Mijn motivatie, leerervaringen en verantwoording:</h3>
 
-<p>Ik heb dit spelletje gemaakt voornamelijk om mijn (vanilla) JavaScript vaardigheden te testen (gemaakt in Visual Studio Code). De achterliggende gedachte van het spelletje is met opzet niet de meest complexe, want dat gaf mij de ruimte om verschillende aspecten van de taal te testen. Denk aan geavanceerde DOM-manipulatie, het structureren van code, refactoring. Het gaf mij ook het nodige praktijk inzicht in de scopestructuur, en hoe events zich door de DOM-Tree bewegen. Daarnaast was het natuurlijk niet alleen een JavaScript oefeningen. De samenwerking tussen HTML, CSS en JavaScript had ik tot op het heden nog niet op deze schaal gezien. Het was een kans om te werken aan mijn (semantic) HMTL en CSS structurering EN ook een kans om echt CSS tot mijn voordeel in te zetten. Uiteraard is de CSS in dit spelletje niet zonder issues, deels doordat ik soms iets TE veel experimenteer waardoor ik mijn eigen vaardigheden soms wat voorbij vlieg. Maar Dat is natuurlijk ook het leerzame ervarn. Dit project is ook mijn eerste Github project, en ondanks dat ik nog maar en fractie ervan heb gebruikt, zie ik er nu al het voordeel van in. Met Git was ik wel al langer bekend, maar het was tot het heden nog bijzonder ongestructureerd. Over dit project heen is het goed zichtbaar hoe mijn Git messages verbetert zijn. En uiteraard heb ik AI (claude) ook benut, al was het wel altijd mijn intentie om zoveel mogelijk zelf te doen en daar heb ik mij ook aan gehouden. Een nuttige helper, maar het moet geen vibecoding worden. Als laatste, ik heb ervoor gekozen om dit spel volledig in het Engels te maken, simpelweg omdat eigenlijk alles wat ik leer ook in het Engels is.</p>
+<p>Ik heb dit spelletje gemaakt voornamelijk om mijn (vanilla) JavaScript-vaardigheden te testen (gemaakt in Visual Studio Code). De achterliggende gedachte van het spelletje is met opzet niet de meest complexe, want dat gaf mij de ruimte om verschillende aspecten van de taal te testen. Denk aan geavanceerde DOM-manipulatie, het structureren van code, refactoring. Het gaf mij ook het nodige praktijkinzicht in de scopestructuur, en hoe events zich door de DOM-tree bewegen. Daarnaast waren het natuurlijk niet alleen JavaScript-oefeningen. De samenwerking tussen HTML, CSS en JavaScript had ik tot op heden nog niet op deze schaal gezien. Het was een kans om te werken aan mijn (semantische) HTML- en CSS-structurering EN ook een kans om echt CSS tot mijn voordeel in te zetten. Uiteraard is de CSS in dit spelletje niet zonder issues, deels doordat ik soms iets TE veel experimenteer, waardoor ik mijn eigen vaardigheden soms wat voorbijvlieg. Maar dat is natuurlijk ook het leerzame ervan. Dit project is ook mijn eerste GitHub-project, en ondanks dat ik nog maar een fractie ervan heb gebruikt, zie ik er nu al het voordeel van in. Met Git was ik wel al langer bekend, maar het was tot heden nog bijzonder ongestructureerd. Over dit project heen is het goed zichtbaar hoe mijn Git-messages verbeterd zijn. En uiteraard heb ik AI (Claude) ook benut, al was het wel altijd mijn intentie om zoveel mogelijk zelf te doen en daar heb ik mij ook aan gehouden. Een nuttige helper, maar het moet geen vibecoding worden. Als laatste: ik heb ervoor gekozen om dit spel volledig in het Engels te maken, simpelweg omdat eigenlijk alles wat ik leer ook in het Engels is.</p>
 
 <h3>Wat zou ik de volgende keer anders doen?</h3>
 
-<p>Het eerste wat in mij opkomt, is mijn planning. Dat komt ook doordat ik van te voren nog niet wist wat dit moest gaan worden. Maar zeker qua styling, helpt het enorm om een goed beeld te hebben van wat je wilt maken. Daarnaast merk ik hoe belangrijk het is om vanuit de basis je code goed te structureren. Halverwege raakte ik eigenlijk verdwaalt in mijn eigen code, wat tot een onnodige ingewikkeld refactor process leidde. Dat kan natuurlijk deels worden voorkomen, door hier gedisciplineerder mee om te gaan. Na het refactoring, waren deze problemen grotendeels verholpen, waardoor ik relatief eenvoudig nieuwe dingen kon toevoegen, en makkelijker bugs kon oplossen, dus de waarde ervan heeft zich bewezen. Als laatste merk ik dat ik nog heel erg inconsistent ben met namen geven. Zeker nu namen van elementen, classes, variables en meer tussen HTML, CSS en JavaScript moeten samenwerken, merk ik gewoon dat mijn huidige namen veel verwarring kunnen veroorzaken. Meer oefening en discipline nodig.</p>
+<p>Het eerste wat in mij opkomt, is mijn planning. Dat komt ook doordat ik van tevoren nog niet wist wat dit moest gaan worden. Maar zeker qua styling, helpt het enorm om een goed beeld te hebben van wat je wilt maken. Daarnaast merk ik hoe belangrijk het is om vanuit de basis je code goed te structureren. Halverwege raakte ik eigenlijk verdwaald in mijn eigen code, wat tot een onnodig ingewikkeld refactorproces leidde. Dat kan natuurlijk deels worden voorkomen, door hier gedisciplineerder mee om te gaan. Na het refactoring, waren deze problemen grotendeels verholpen, waardoor ik relatief eenvoudig nieuwe dingen kon toevoegen, en makkelijker bugs kon oplossen, dus de waarde ervan heeft zich bewezen. Als laatste merk ik dat ik nog heel erg inconsistent ben met namen geven. Zeker nu namen van elementen, classes, variabelen en meer tussen HTML, CSS en JavaScript moeten samenwerken, merk ik gewoon dat mijn huidige namen veel verwarring kunnen veroorzaken. Meer oefening en discipline nodig.</p>
 
 <h3>Wat ik nog wil toevoegen in de toekomst / bugfixes:</h3>
 
-<p>Ondanks dat ik dit project grotendeels zijn doel heeft bereikt voor mij, zijn er nog een aantal aspecten die ik wil toevoegen. Bovenaan die lijst staat een feature waarmee een speler een "account" (in de meest simpele zin van het woord) kan aanmaken, zodat de stats per persoon worden bijgehouden. Eventueel, als dit een logische stap is, dan wil kijken of ik dit vanui het Object Oriented Programming (OOP) perspectief kan doen. Daarnaast zitten er nou eenmaal een aantal bugs nog in die in de toekomst mogelijk gefixt worden. De voornaamste: wanneer je de hint button klikt, vlak nadat de reset is geinitieerd (voordat het nieuwe spel klaar staat), dan breekt het volgende spel.</p>
+<p>Ondanks dat dit project grotendeels zijn doel heeft bereikt voor mij, zijn er nog een aantal aspecten die ik wil toevoegen. Bovenaan die lijst staat een feature waarmee een speler een "account" (in de meest simpele zin van het woord) kan aanmaken, zodat de stats per persoon worden bijgehouden. Eventueel, als dit een logische stap is, wil ik kijken of ik dit vanuit het Object-Oriented Programming (OOP) perspectief kan doen. Daarnaast zitten er nou eenmaal een aantal bugs nog in die in de toekomst mogelijk gefixt worden. De voornaamste: wanneer je de hintbutton klikt, vlak nadat de reset is geïnitieerd (voordat het nieuwe spel klaarstaat), dan breekt het volgende spel.</p>
+
+<h3>Hoe open je het spel?</h3>
+
+<p>Download de zip (groene knop), houd de 3 files in dezelfde map, en open index.html (in de browser)</p>
+
+
+<br>
+<h2>English version</h2>
+
+<h3>Game rules and features:</h3>
+
+<ul>
+<li>The game itself is incredibly simple in complexity. Move your mouse over the boxes until you find the box with the correct number. In other words, guess the number. Originally, it was a click game, but I changed this to a mouse-over game because it made the flow much smoother.</li>
+
+<li>There are two overviews in the sidebar. The first shows the stats of the current game, and the second shows the stats of all played games. I have placed this in a slider so that the space is used optimally.</li>
+
+<li>Furthermore, there is an "options" button, which allows you to set your own number of choice buttons, as well as your own number of attempts.</li>
+
+<li>There is a checkbox (default=true) that lets you indicate whether you want to retain the settings for the number of choices. However, this does not work for the attempts; these are set by default to 40% of the number of choice buttons. I did not want these 2 settings to depend on a single button, and I simply never got around to adding a second one.</li>
+
+<li>There is a hint button, which can be operated with the button itself or by pressing "z" on the keyboard. Why "z"? It is simply a convenient place for a button when you are operating your mouse with your other hand. When the game is active, the hint indicates whether your last choice was too high or too low. Additionally, there are some alternative messages possible when a hint is not logical. Before and after the game, for example.</li>
+
+<li>Finally, various dynamic texts appear that provide feedback based on the game. This is made possible by the game's use of game_states. For example, "WIN" or "LOSS". Based on these states, the game can react dynamically to the players' actions.</li>
+</ul>
+
+<h3>My motivation, learning experiences, and justification:</h3>
+
+<p>I created this game primarily to test my (vanilla) JavaScript skills (made in Visual Studio Code). The underlying concept of the game is intentionally not the most complex, as this gave me the space to test various aspects of the language. Think of advanced DOM manipulation, structuring code, and refactoring. It also gave me the necessary practical insight into the scope structure and how events move through the DOM tree. Furthermore, these were, of course, not just JavaScript exercises. I had not seen the collaboration between HTML, CSS, and JavaScript on this scale until now. It was an opportunity to work on my (semantic) HTML and CSS structuring AND also a chance to really put CSS to my advantage. Naturally, the CSS in this game is not without issues, partly because I sometimes experiment a little TOO much, causing me to occasionally overshoot my own skills. But that is, of course, also part of the educational aspect of it. This project is also my first GitHub project, and although I have only used a fraction of it so far, I already see the benefit of it. I had been familiar with Git for quite some time, but until now it was particularly unstructured. Across this project, it is clearly visible how my Git messages have improved. And naturally, I also utilized AI (Claude), although it was always my intention to do as much as possible myself, and I stuck to that. A useful helper, but it shouldn't turn into vibecoding. Finally: I chose to make this game entirely in English, simply because basically everything I learn is in English.
+
+<h3>What would I do differently next time?</h3>
+
+<p>The first thing that comes to mind is my planning. That is partly because I didn't know beforehand what this was going to become. But certainly in terms of styling, it helps enormously to have a clear picture of what you want to create. Additionally, I notice how important it is to structure your code well from the ground up. Halfway through, I actually got lost in my own code, which led to an unnecessarily complicated refactoring process. Of course, that can be partly prevented by being more disciplined about it. After the refactoring, these problems were largely resolved, allowing me to add new things relatively easily and fix bugs more easily, so its value has been proven. Finally, I notice that I am still very inconsistent with naming things. Especially now that names for elements, classes, variables, and more need to work together between HTML, CSS, and JavaScript, I simply notice that my current names can cause a lot of confusion. More practice and discipline needed.</p>
+
+<h3>What I still want to add in the future / bug fixes:</h3>
+
+<p>Although this project has largely achieved its goal for me, there are still a number of aspects I want to add. At the top of that list is a feature that allows a player to create an "account" (in the simplest sense of the word), so that stats are tracked per person. Potentially, if this is a logical step, I want to see if I can do this from an Object-Oriented Programming (OOP) perspective. Additionally, there are simply a number of bugs that may still be fixed in the future. The main one: when you click the hint button right after the reset has been initiated (before the new game is ready), the next game breaks.</p>
+
+<h3>How do you open the game?</h3>
+
+<p>Download the zip (green button), keep the 3 files in the same folder, and open index.html (in the browser)</p>
+
