@@ -501,4 +501,3 @@ window.addEventListener("resize", updateAlignment);
 // future feature: stats per person (create account)
 // future feature: dynamically limit the amount of hinst per choices or attempts.
 // future feature: add an option to keep attempts preferences too, without breaking the default logic
-zd;
