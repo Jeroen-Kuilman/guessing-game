@@ -28,6 +28,7 @@ const btnConfirm = document.querySelector(".btn-confirm");
 
 // default variables
 const MAX_CHOICE = 1000;
+const MAX_ATTEMPTS = 500;
 const DEFAULT_CHOICE_AMOUNT = 30;
 const INITIAL_DELAY = 800;
 const INTERVAL_SPEED = 10;
@@ -382,7 +383,7 @@ btnConfirm.addEventListener("click", function (e) {
   );
 
   settings.attemptAmount = inputAttemptAmount.value
-    ? Math.min(50, Math.max(1, +inputAttemptAmount.value))
+    ? Math.min(MAX_ATTEMPTS, Math.max(1, +inputAttemptAmount.value))
     : null;
 
   init(settings.choiceAmount);
@@ -401,6 +402,7 @@ document.addEventListener("keydown", function (e) {
   if (e.key === "z") showHint();
 });
 
+window.addEventListener("resize", updateAlignment);
 //////////////////////////////////////////////
 // A seperate all inclusive slider function (needs to be refactored)
 /////////////////////////////////////////////
@@ -471,7 +473,7 @@ const slider = function () {
 
   sliderInit();
 
-  // Event handlers
+  // Slider event handlers
   btnRight.addEventListener("click", nextSlide);
   btnLeft.addEventListener("click", prevSlide);
 
@@ -489,8 +491,6 @@ const slider = function () {
   });
 };
 slider();
-
-window.addEventListener("resize", updateAlignment);
 
 //////////////////////////////////////
 // future features, current bugs and other issues
