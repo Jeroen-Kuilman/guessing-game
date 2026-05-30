@@ -1,6 +1,6 @@
 # The Guessing game README
 
-![Gameplay screenshot](screenshot.png)
+![Gameplay screenshot](Screenshot-guessing-game.png)
 
 ## Live Demo
 
