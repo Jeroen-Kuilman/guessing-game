@@ -6,6 +6,8 @@
 
 [Play the game here](https://jeroen-kuilman.github.io/guessing-game/)
 
+(Note: the game is not responsive, so the game most likely won't work on phones and tablets!)
+
 ## Tech Stack
 
 - **JavaScript (ES6+)** — game state management, dynamic DOM manipulation, event delegation
